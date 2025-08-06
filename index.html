@@ -1,7 +1,609 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>William Ravenscroft - Speech Technology Researcher</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Georgia', serif;
+            line-height: 1.6;
+            color: #333;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            border-radius: 20px;
+            margin-top: 2rem;
+            margin-bottom: 2rem;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+            overflow: hidden;
+        }
+        
+        .header {
+            background: linear-gradient(135deg, #2c3e50 0%, #34495e 100%);
+            color: white;
+            padding: 3rem 2rem;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .header::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1000 100" fill="rgba(255,255,255,0.03)"><polygon points="0,0 1000,0 1000,60 0,100"/></svg>') repeat-x;
+            background-size: 100px 100px;
+        }
+        
+        .header-content {
+            position: relative;
+            z-index: 2;
+        }
+        
+        .name {
+            font-size: 3.5rem;
+            margin-bottom: 0.5rem;
+            font-weight: 300;
+            letter-spacing: 2px;
+        }
+        
+        .title {
+            font-size: 1.3rem;
+            margin-bottom: 1rem;
+            opacity: 0.9;
+            font-weight: 300;
+        }
+        
+        .contact-info {
+            display: flex;
+            justify-content: center;
+            gap: 2rem;
+            flex-wrap: wrap;
+            margin-top: 1.5rem;
+        }
+        
+        .contact-item {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            opacity: 0.9;
+            transition: opacity 0.3s ease;
+        }
+        
+        .contact-item:hover {
+            opacity: 1;
+        }
+        
+        .contact-item a {
+            color: white;
+            text-decoration: none;
+        }
+        
+        .main-content {
+            display: grid;
+            grid-template-columns: 1fr 300px;
+            gap: 3rem;
+            padding: 3rem;
+        }
+        
+        .left-column {
+            flex: 1;
+        }
+        
+        .right-column {
+            background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+            padding: 2rem;
+            border-radius: 15px;
+            height: fit-content;
+            position: sticky;
+            top: 2rem;
+        }
+        
+        .section {
+            margin-bottom: 3rem;
+            opacity: 0;
+            animation: fadeInUp 0.8s ease forwards;
+        }
+        
+        .section:nth-child(1) { animation-delay: 0.1s; }
+        .section:nth-child(2) { animation-delay: 0.2s; }
+        .section:nth-child(3) { animation-delay: 0.3s; }
+        .section:nth-child(4) { animation-delay: 0.4s; }
+        
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        
+        .section-title {
+            font-size: 2rem;
+            color: #2c3e50;
+            margin-bottom: 1.5rem;
+            padding-bottom: 0.5rem;
+            border-bottom: 3px solid #3498db;
+            position: relative;
+        }
+        
+        .section-title::after {
+            content: '';
+            position: absolute;
+            left: 0;
+            bottom: -3px;
+            width: 50px;
+            height: 3px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            border-radius: 3px;
+        }
+        
+        .bio {
+            font-size: 1.1rem;
+            line-height: 1.8;
+            color: #555;
+            background: linear-gradient(135deg, #f8f9fa 0%, #ffffff 100%);
+            padding: 2rem;
+            border-radius: 10px;
+            border-left: 5px solid #3498db;
+        }
+        
+        .research-interests {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 1rem;
+            margin-top: 1rem;
+        }
+        
+        .interest-card {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 1.5rem;
+            border-radius: 10px;
+            text-align: center;
+            transform: translateY(0);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+        
+        .interest-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 15px 30px rgba(102, 126, 234, 0.3);
+        }
+        
+        .publications-list {
+            list-style: none;
+        }
+        
+        .publication-item {
+            background: white;
+            padding: 1.5rem;
+            margin-bottom: 1rem;
+            border-radius: 10px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.08);
+            border-left: 4px solid #3498db;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+        
+        .publication-item:hover {
+            transform: translateX(5px);
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.12);
+        }
+        
+        .pub-title {
+            font-weight: bold;
+            color: #2c3e50;
+            margin-bottom: 0.5rem;
+            font-size: 1.1rem;
+        }
+        
+        .pub-authors {
+            color: #555;
+            margin-bottom: 0.5rem;
+        }
+        
+        .pub-venue {
+            color: #3498db;
+            font-style: italic;
+            font-weight: 600;
+        }
+        
+        .employment-item {
+            background: white;
+            padding: 2rem;
+            margin-bottom: 1.5rem;
+            border-radius: 10px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.08);
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .employment-item::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 4px;
+            height: 100%;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        }
+        
+        .job-title {
+            font-size: 1.3rem;
+            font-weight: bold;
+            color: #2c3e50;
+            margin-bottom: 0.5rem;
+        }
+        
+        .company-date {
+            color: #3498db;
+            font-weight: 600;
+            margin-bottom: 1rem;
+        }
+        
+        .job-description ul {
+            margin-left: 1rem;
+        }
+        
+        .job-description li {
+            margin-bottom: 0.5rem;
+            color: #555;
+        }
+        
+        .stats-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1rem;
+            margin-bottom: 2rem;
+        }
+        
+        .stat-card {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 1.5rem;
+            border-radius: 10px;
+            text-align: center;
+        }
+        
+        .stat-number {
+            font-size: 2rem;
+            font-weight: bold;
+            margin-bottom: 0.5rem;
+        }
+        
+        .stat-label {
+            font-size: 0.9rem;
+            opacity: 0.9;
+        }
+        
+        .education-item {
+            background: white;
+            padding: 1.5rem;
+            margin-bottom: 1rem;
+            border-radius: 10px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.08);
+            border-left: 4px solid #e74c3c;
+        }
+        
+        .degree {
+            font-weight: bold;
+            color: #2c3e50;
+            margin-bottom: 0.5rem;
+        }
+        
+        .institution {
+            color: #e74c3c;
+            font-weight: 600;
+            margin-bottom: 0.25rem;
+        }
+        
+        .duration {
+            color: #555;
+            font-size: 0.9rem;
+            margin-bottom: 0.5rem;
+        }
+        
+        .project-links a {
+            display: inline-block;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 0.75rem 1.5rem;
+            border-radius: 25px;
+            text-decoration: none;
+            margin: 0.5rem 0.5rem 0.5rem 0;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+        
+        .project-links a:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 20px rgba(102, 126, 234, 0.3);
+        }
+        
+        @media (max-width: 768px) {
+            .main-content {
+                grid-template-columns: 1fr;
+                padding: 1.5rem;
+            }
+            
+            .name {
+                font-size: 2.5rem;
+            }
+            
+            .contact-info {
+                flex-direction: column;
+                gap: 1rem;
+            }
+            
+            .research-interests {
+                grid-template-columns: 1fr;
+            }
+            
+            .stats-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
 <body>
-<h1>Hello World</h1>
-<p>I'm hosted with GitHub Pages.</p>
+    <div class="container">
+        <header class="header">
+            <div class="header-content">
+                <h1 class="name">William Ravenscroft</h1>
+                <p class="title">PhD, MSc, MEng (Hons), PGDip</p>
+                <p class="title">Speech Technology Researcher & Data Scientist</p>
+                <div class="contact-info">
+                    <div class="contact-item">
+                        <span>📧</span>
+                        <a href="mailto:jwravenscroft@gmail.com">jwravenscroft@gmail.com</a>
+                    </div>
+                    <div class="contact-item">
+                        <span>📱</span>
+                        <span>(+44) 07876502734</span>
+                    </div>
+                    <div class="contact-item">
+                        <span>📍</span>
+                        <span>Chesterfield, UK</span>
+                    </div>
+                    <div class="contact-item">
+                        <span>🎓</span>
+                        <a href="https://scholar.google.co.uk/citations?user=MrFn0HIAAAAJ&hl=en" target="_blank">Google Scholar</a>
+                    </div>
+                </div>
+            </div>
+        </header>
+        
+        <div class="main-content">
+            <div class="left-column">
+                <section class="section">
+                    <h2 class="section-title">About</h2>
+                    <div class="bio">
+                        I am a Speech Technology Researcher and Data Scientist with expertise in speech enhancement, speech recognition, and multi-speaker analysis. Currently working at ConnexAI, I specialize in developing cutting-edge solutions for automatic speech recognition (ASR) and text-to-speech (TTS) systems. My research focuses on deep learning approaches to speech separation in challenging acoustic environments, with applications ranging from telephony speech processing to voice cloning technologies.
+                        <br><br>
+                        I completed my PhD at the University of Sheffield's Centre for Doctoral Training in Speech and Language Technology, where my thesis explored speech separation in noisy and reverberant acoustic environments. My work has been published in top-tier conferences including ICASSP, EUSIPCO, and ASRU, and I have contributed to multiple CHiME workshops.
+                    </div>
+                </section>
+                
+                <section class="section">
+                    <h2 class="section-title">Research Interests</h2>
+                    <div class="research-interests">
+                        <div class="interest-card">
+                            <h3>Speech Enhancement</h3>
+                            <p>Deep learning models for noise reduction and speech quality improvement</p>
+                        </div>
+                        <div class="interest-card">
+                            <h3>Speech Separation</h3>
+                            <p>Single and multi-channel source separation in complex acoustic environments</p>
+                        </div>
+                        <div class="interest-card">
+                            <h3>Speech Recognition</h3>
+                            <p>Robust ASR systems for noisy and multi-speaker scenarios</p>
+                        </div>
+                        <div class="interest-card">
+                            <h3>Multi-Speaker Analysis</h3>
+                            <p>Processing and understanding of multi-speaker audio streams</p>
+                        </div>
+                    </div>
+                </section>
+                
+                <section class="section">
+                    <h2 class="section-title">Employment</h2>
+                    <div class="employment-item">
+                        <div class="job-title">Speech Data Scientist</div>
+                        <div class="company-date">ConnexAI • Aug 2024 - Present • Manchester, UK</div>
+                        <div class="job-description">
+                            <ul>
+                                <li>Developed first-of-its-kind speech data filter for isolating suitable TTS training data from in-the-wild speech</li>
+                                <li>Reduced ASR model output token delay by a factor of two</li>
+                                <li>Built dynamic training framework simulating telephony speech on-the-fly at scale</li>
+                                <li>Developed speech enhancement models for end-of-utterance detection and voice cloning applications</li>
+                            </ul>
+                        </div>
+                    </div>
+                    
+                    <div class="employment-item">
+                        <div class="job-title">Audio Machine Learning Co-op</div>
+                        <div class="company-date">Bose Corporation • Jan 2024 - June 2024 • Remote</div>
+                        <div class="job-description">
+                            <p>Developed tiny ML based speech extraction models using voice activity signals for low power hearing devices.</p>
+                        </div>
+                    </div>
+                    
+                    <div class="employment-item">
+                        <div class="job-title">Speech Research Internship</div>
+                        <div class="company-date">3M • Jun 2023 - Oct 2023 • Remote</div>
+                        <div class="job-description">
+                            <p>Transcription-free adaptation of speech separation models for multi-speaker speech recognition systems in medical transcription applications.</p>
+                        </div>
+                    </div>
+                    
+                    <div class="employment-item">
+                        <div class="job-title">Graduate Teaching Assistant</div>
+                        <div class="company-date">University of Sheffield • Sept 2020 - Feb 2022 • Sheffield, UK</div>
+                        <div class="job-description">
+                            <p>Aided students in learning, generated workshops focused on speech processing pipelines, and marked assignments.</p>
+                        </div>
+                    </div>
+                </section>
+                
+                <section class="section">
+                    <h2 class="section-title">Selected Publications</h2>
+                    <ul class="publications-list">
+                        <li class="publication-item">
+                            <div class="pub-title">Multi-CMGAN++: Leveraging Multi-Objective Speech Quality Metric Prediction for Speech Enhancement</div>
+                            <div class="pub-authors">G. Close, <strong>W. Ravenscroft</strong>, S. Goetze, T. Hain</div>
+                            <div class="pub-venue">ICASSP 2024</div>
+                        </li>
+                        
+                        <li class="publication-item">
+                            <div class="pub-title">Combining Conformer and Dual-Path-Transformer Networks for Single Channel Noisy Reverberant Speech Separation</div>
+                            <div class="pub-authors"><strong>W. Ravenscroft</strong>, S. Goetze, T. Hain</div>
+                            <div class="pub-venue">ICASSP 2024</div>
+                        </li>
+                        
+                        <li class="publication-item">
+                            <div class="pub-title">On Time Domain Conformer Models for Monaural Speech Separation in Noisy Reverberant Acoustic Environments</div>
+                            <div class="pub-authors"><strong>W. Ravenscroft</strong>, S. Goetze, T. Hain</div>
+                            <div class="pub-venue">ASRU 2023</div>
+                        </li>
+                        
+                        <li class="publication-item">
+                            <div class="pub-title">On Data Sampling Strategies for Training Neural Network Speech Separation Models</div>
+                            <div class="pub-authors"><strong>W. Ravenscroft</strong>, S. Goetze, T. Hain</div>
+                            <div class="pub-venue">EUSIPCO 2023</div>
+                        </li>
+                        
+                        <li class="publication-item">
+                            <div class="pub-title">Deformable Temporal Convolutional Networks for Monaural Noisy Reverberant Speech Separation</div>
+                            <div class="pub-authors"><strong>W. Ravenscroft</strong>, S. Goetze, T. Hain</div>
+                            <div class="pub-venue">ICASSP 2023</div>
+                        </li>
+                        
+                        <li class="publication-item">
+                            <div class="pub-title">Perceive and predict: self-supervised speech representation based loss functions for speech enhancement</div>
+                            <div class="pub-authors">G. Close, <strong>W. Ravenscroft</strong>, S. Goetze, T. Hain</div>
+                            <div class="pub-venue">ICASSP 2023</div>
+                        </li>
+                        
+                        <li class="publication-item">
+                            <div class="pub-title">Utterance Weighted Multi-Dilation Temporal Convolution Networks for Monaural Speech Dereverberation</div>
+                            <div class="pub-authors"><strong>W. Ravenscroft</strong>, S. Goetze, T. Hain</div>
+                            <div class="pub-venue">IWAENC 2022</div>
+                        </li>
+                        
+                        <li class="publication-item">
+                            <div class="pub-title">Att-TasNet: Attending to Encodings in Time-Domain Audio Speech Separation of Noisy, Reverberant Speech Mixtures</div>
+                            <div class="pub-authors"><strong>W. Ravenscroft</strong>, S. Goetze, T. Hain</div>
+                            <div class="pub-venue">Frontiers in Signal Processing Vol. 2, 2022</div>
+                        </li>
+                    </ul>
+                </section>
+                
+                <section class="section">
+                    <h2 class="section-title">Open Source Projects</h2>
+                    <div class="employment-item">
+                        <div class="job-title">dc1d</div>
+                        <div class="job-description">
+                            <p>A Python library for 1D Deformable Convolution in PyTorch, distributed via pip.</p>
+                            <div class="project-links">
+                                <a href="https://github.com/jwr1995/dc1d" target="_blank">🔗 GitHub Repository</a>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="employment-item">
+                        <div class="job-title">PubSep</div>
+                        <div class="job-description">
+                            <p>A repository of SpeechBrain / PyTorch recipes for published speech separation models.</p>
+                            <div class="project-links">
+                                <a href="https://github.com/jwr1995/PubSep" target="_blank">🔗 GitHub Repository</a>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+            </div>
+            
+            <div class="right-column">
+                <div class="stats-grid">
+                    <div class="stat-card">
+                        <div class="stat-number">87</div>
+                        <div class="stat-label">Citations</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-number">10+</div>
+                        <div class="stat-label">Publications</div>
+                    </div>
+                </div>
+                
+                <h3 style="color: #2c3e50; margin-bottom: 1rem; font-size: 1.3rem;">Education</h3>
+                
+                <div class="education-item">
+                    <div class="degree">PhD & PGDip - Computer Science</div>
+                    <div class="institution">University of Sheffield</div>
+                    <div class="duration">2019 - 2024</div>
+                    <p style="font-size: 0.9rem; color: #555; margin-top: 0.5rem;">
+                        CDT in Speech and Language Technology<br>
+                        <em>Thesis: Speech Separation in Noisy and Reverberant Acoustics Environments</em>
+                    </p>
+                </div>
+                
+                <div class="education-item">
+                    <div class="degree">MSc - Mathematical Finance</div>
+                    <div class="institution">University of York</div>
+                    <div class="duration">2018 - 2019</div>
+                </div>
+                
+                <div class="education-item">
+                    <div class="degree">MEng (Hons) - Electronic Engineering with Music Technology Systems</div>
+                    <div class="institution">University of York</div>
+                    <div class="duration">2013 - 2017</div>
+                    <p style="font-size: 0.9rem; color: #555; margin-top: 0.5rem;"><em>IET Accredited</em></p>
+                </div>
+                
+                <h3 style="color: #2c3e50; margin: 2rem 0 1rem 0; font-size: 1.3rem;">Technical Skills</h3>
+                <div style="display: flex; flex-wrap: wrap; gap: 0.5rem;">
+                    <span style="background: #3498db; color: white; padding: 0.3rem 0.8rem; border-radius: 15px; font-size: 0.8rem;">Python</span>
+                    <span style="background: #e74c3c; color: white; padding: 0.3rem 0.8rem; border-radius: 15px; font-size: 0.8rem;">PyTorch</span>
+                    <span style="background: #f39c12; color: white; padding: 0.3rem 0.8rem; border-radius: 15px; font-size: 0.8rem;">TensorFlow</span>
+                    <span style="background: #9b59b6; color: white; padding: 0.3rem 0.8rem; border-radius: 15px; font-size: 0.8rem;">SpeechBrain</span>
+                    <span style="background: #2ecc71; color: white; padding: 0.3rem 0.8rem; border-radius: 15px; font-size: 0.8rem;">Git</span>
+                    <span style="background: #34495e; color: white; padding: 0.3rem 0.8rem; border-radius: 15px; font-size: 0.8rem;">SLURM</span>
+                    <span style="background: #16a085; color: white; padding: 0.3rem 0.8rem; border-radius: 15px; font-size: 0.8rem;">ESPNet</span>
+                    <span style="background: #8e44ad; color: white; padding: 0.3rem 0.8rem; border-radius: 15px; font-size: 0.8rem;">MATLAB</span>
+                    <span style="background: #27ae60; color: white; padding: 0.3rem 0.8rem; border-radius: 15px; font-size: 0.8rem;">C++</span>
+                </div>
+                
+                <h3 style="color: #2c3e50; margin: 2rem 0 1rem 0; font-size: 1.3rem;">Leadership</h3>
+                <div class="education-item">
+                    <div class="degree">President</div>
+                    <div class="institution">University of Sheffield Speech and Language Technology Society</div>
+                    <div class="duration">2023-2024</div>
+                </div>
+                
+                <div class="education-item">
+                    <div class="degree">Publicity Officer</div>
+                    <div class="institution">University of Sheffield Speech and Language Technology Society</div>
+                    <div class="duration">2022-2023</div>
+                </div>
+            </div>
+        </div>
+    </div>
 </body>
 </html>

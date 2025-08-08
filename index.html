@@ -56,6 +56,47 @@
             z-index: 2;
         }
         
+        .profile-section {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 2rem;
+            margin-bottom: 1.5rem;
+        }
+        
+        .profile-image-placeholder {
+            width: 150px;
+            height: 150px;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.1);
+            border: 3px dashed rgba(255, 255, 255, 0.3);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.3s ease;
+        }
+        
+        .profile-image-placeholder:hover {
+            background: rgba(255, 255, 255, 0.15);
+            border-color: rgba(255, 255, 255, 0.5);
+        }
+        
+        .profile-icon {
+            font-size: 3rem;
+            opacity: 0.7;
+        }
+        
+        .image-text {
+            font-size: 0.8rem;
+            opacity: 0.6;
+            margin-top: 0.5rem;
+        }
+        
+        .name-title-section {
+            text-align: center;
+        }
+        
         .name {
             font-size: 3.5rem;
             margin-bottom: 0.5rem;
@@ -343,6 +384,20 @@
                 padding: 1.5rem;
             }
             
+            .profile-section {
+                flex-direction: column;
+                gap: 1rem;
+            }
+            
+            .profile-image-placeholder {
+                width: 120px;
+                height: 120px;
+            }
+            
+            .profile-icon {
+                font-size: 2.5rem;
+            }
+            
             .name {
                 font-size: 2.5rem;
             }
@@ -366,17 +421,21 @@
     <div class="container">
         <header class="header">
             <div class="header-content">
-                <h1 class="name">William Ravenscroft</h1>
-                <p class="title">PhD, MSc, MEng (Hons), PGDip</p>
-                <p class="title">Speech Technology Researcher & Data Scientist</p>
+                <div class="profile-section">
+                    <div class="profile-image-placeholder">
+                        <span class="profile-icon">👤</span>
+                        <p class="image-text">Profile Image</p>
+                    </div>
+                    <div class="name-title-section">
+                        <h1 class="name">Dr. William Ravenscroft</h1>
+                        <p class="title">PhD, MSc, MEng (Hons), PGDip</p>
+                        <p class="title">Speech Technology Researcher & Data Scientist</p>
+                    </div>
+                </div>
                 <div class="contact-info">
                     <div class="contact-item">
                         <span>📧</span>
                         <a href="mailto:jwravenscroft@gmail.com">jwravenscroft@gmail.com</a>
-                    </div>
-                    <div class="contact-item">
-                        <span>📱</span>
-                        <span>(+44) 07876502734</span>
                     </div>
                     <div class="contact-item">
                         <span>📍</span>
@@ -385,6 +444,10 @@
                     <div class="contact-item">
                         <span>🎓</span>
                         <a href="https://scholar.google.co.uk/citations?user=MrFn0HIAAAAJ&hl=en" target="_blank">Google Scholar</a>
+                    </div>
+                    <div class="contact-item">
+                        <span>🆔</span>
+                        <a href="https://orcid.org/0000-0002-0780-3303" target="_blank">ORCID</a>
                     </div>
                 </div>
             </div>
@@ -429,12 +492,7 @@
                         <div class="job-title">Speech Data Scientist</div>
                         <div class="company-date">ConnexAI • Aug 2024 - Present • Manchester, UK</div>
                         <div class="job-description">
-                            <ul>
-                                <li>Developed first-of-its-kind speech data filter for isolating suitable TTS training data from in-the-wild speech</li>
-                                <li>Reduced ASR model output token delay by a factor of two</li>
-                                <li>Built dynamic training framework simulating telephony speech on-the-fly at scale</li>
-                                <li>Developed speech enhancement models for end-of-utterance detection and voice cloning applications</li>
-                            </ul>
+                            <p>Leading research and development of advanced speech processing solutions for production ASR and TTS systems. Focused on developing novel approaches to speech enhancement, data filtering, and model optimization for real-world deployment scenarios.</p>
                         </div>
                     </div>
                     
@@ -442,7 +500,7 @@
                         <div class="job-title">Audio Machine Learning Co-op</div>
                         <div class="company-date">Bose Corporation • Jan 2024 - June 2024 • Remote</div>
                         <div class="job-description">
-                            <p>Developed tiny ML based speech extraction models using voice activity signals for low power hearing devices.</p>
+                            <p>Research and development of machine learning models for audio processing applications in consumer electronics, with focus on resource-constrained environments and edge deployment.</p>
                         </div>
                     </div>
                     
@@ -450,68 +508,107 @@
                         <div class="job-title">Speech Research Internship</div>
                         <div class="company-date">3M • Jun 2023 - Oct 2023 • Remote</div>
                         <div class="job-description">
-                            <p>Transcription-free adaptation of speech separation models for multi-speaker speech recognition systems in medical transcription applications.</p>
-                        </div>
-                    </div>
-                    
-                    <div class="employment-item">
-                        <div class="job-title">Graduate Teaching Assistant</div>
-                        <div class="company-date">University of Sheffield • Sept 2020 - Feb 2022 • Sheffield, UK</div>
-                        <div class="job-description">
-                            <p>Aided students in learning, generated workshops focused on speech processing pipelines, and marked assignments.</p>
+                            <p>Applied research in speech processing and machine learning for healthcare applications, developing novel approaches to multi-speaker audio analysis and transcription systems.</p>
                         </div>
                     </div>
                 </section>
                 
                 <section class="section">
-                    <h2 class="section-title">Selected Publications</h2>
+                    <h2 class="section-title">Publications</h2>
+                    
+                    <h3 style="color: #2c3e50; margin-bottom: 1rem; font-size: 1.3rem; border-left: 4px solid #3498db; padding-left: 1rem;">2025</h3>
                     <ul class="publications-list">
                         <li class="publication-item">
+                            <div class="pub-title">AITW: The Annotated In-the-Wild Dataset for Filtering of In-the-Wild Speech Data</div>
+                            <div class="pub-authors"><strong>W. Ravenscroft</strong>, G. Close, J. Stacey, K. Bower-Morris, D. Sityaev, K.Y. Hong, ConnexAI</div>
+                            <div class="pub-venue">Interspeech 2025, Rotterdam • <a href="https://doi.org/10.5281/zenodo.15534662" target="_blank" style="color: #3498db;">DOI</a></div>
+                        </li>
+                        
+                        <li class="publication-item">
+                            <div class="pub-title">Whilter: A Whisper-based Data Filter for "In-the-Wild" Speech Corpora Using Utterance-level Multi-Task Classification</div>
+                            <div class="pub-authors"><strong>W. Ravenscroft</strong>, G. Close, K. Bower-Morris, J. Stacey, D. Sityaev, K.Y. Hong</div>
+                            <div class="pub-venue">Interspeech 2025, Rotterdam</div>
+                        </li>
+                    </ul>
+                    
+                    <h3 style="color: #2c3e50; margin: 2rem 0 1rem 0; font-size: 1.3rem; border-left: 4px solid #e74c3c; padding-left: 1rem;">2024</h3>
+                    <ul class="publications-list">
+                        <li class="publication-item">
+                            <div class="pub-title">Speech Separation in Noisy Reverberant Acoustic Environments</div>
+                            <div class="pub-authors"><strong>W. Ravenscroft</strong></div>
+                            <div class="pub-venue">PhD Thesis, University of Sheffield</div>
+                        </li>
+                        
+                        <li class="publication-item">
+                            <div class="pub-title">Transcription-Free Fine-Tuning of Speech Separation Models for Noisy and Reverberant Multi-Speaker Automatic Speech Recognition</div>
+                            <div class="pub-authors"><strong>W. Ravenscroft</strong>, G. Close, S. Goetze, T. Hain, M. Soleymanpour, A. Chowdhury, M.C. Fuhs</div>
+                            <div class="pub-venue">Interspeech 2024</div>
+                        </li>
+                        
+                        <li class="publication-item">
                             <div class="pub-title">Multi-CMGAN++: Leveraging Multi-Objective Speech Quality Metric Prediction for Speech Enhancement</div>
-                            <div class="pub-authors">G. Close, <strong>W. Ravenscroft</strong>, S. Goetze, T. Hain</div>
-                            <div class="pub-venue">ICASSP 2024</div>
+                            <div class="pub-authors">G. Close, <strong>W. Ravenscroft</strong>, T. Hain, S. Goetze</div>
+                            <div class="pub-venue">ICASSP 2024, pp. 351-355 • <a href="https://doi.org/10.1109/ICASSP48485.2024.10447032" target="_blank" style="color: #3498db;">DOI</a></div>
                         </li>
                         
                         <li class="publication-item">
                             <div class="pub-title">Combining Conformer and Dual-Path-Transformer Networks for Single Channel Noisy Reverberant Speech Separation</div>
                             <div class="pub-authors"><strong>W. Ravenscroft</strong>, S. Goetze, T. Hain</div>
-                            <div class="pub-venue">ICASSP 2024</div>
+                            <div class="pub-venue">ICASSP 2024, pp. 11491-11495 • <a href="https://doi.org/10.1109/ICASSP48485.2024.10447464" target="_blank" style="color: #3498db;">DOI</a></div>
                         </li>
-                        
+                    </ul>
+                    
+                    <h3 style="color: #2c3e50; margin: 2rem 0 1rem 0; font-size: 1.3rem; border-left: 4px solid #f39c12; padding-left: 1rem;">2023</h3>
+                    <ul class="publications-list">
                         <li class="publication-item">
                             <div class="pub-title">On Time Domain Conformer Models for Monaural Speech Separation in Noisy Reverberant Acoustic Environments</div>
                             <div class="pub-authors"><strong>W. Ravenscroft</strong>, S. Goetze, T. Hain</div>
-                            <div class="pub-venue">ASRU 2023</div>
+                            <div class="pub-venue">ASRU 2023, pp. 1-7</div>
+                        </li>
+                        
+                        <li class="publication-item">
+                            <div class="pub-title">The University of Sheffield CHiME-7 UDASE Challenge Speech Enhancement System</div>
+                            <div class="pub-authors">G. Close, <strong>W. Ravenscroft</strong>, T. Hain, S. Goetze</div>
+                            <div class="pub-venue">CHiME-2023 Workshop, pp. 33-38</div>
                         </li>
                         
                         <li class="publication-item">
                             <div class="pub-title">On Data Sampling Strategies for Training Neural Network Speech Separation Models</div>
                             <div class="pub-authors"><strong>W. Ravenscroft</strong>, S. Goetze, T. Hain</div>
-                            <div class="pub-venue">EUSIPCO 2023</div>
+                            <div class="pub-venue">EUSIPCO 2023, pp. 331-335</div>
                         </li>
                         
                         <li class="publication-item">
                             <div class="pub-title">Deformable Temporal Convolutional Networks for Monaural Noisy Reverberant Speech Separation</div>
                             <div class="pub-authors"><strong>W. Ravenscroft</strong>, S. Goetze, T. Hain</div>
-                            <div class="pub-venue">ICASSP 2023</div>
+                            <div class="pub-venue">ICASSP 2023, pp. 1-5 • <a href="https://doi.org/10.1109/ICASSP49357.2023.10096281" target="_blank" style="color: #3498db;">DOI</a></div>
                         </li>
                         
                         <li class="publication-item">
-                            <div class="pub-title">Perceive and predict: self-supervised speech representation based loss functions for speech enhancement</div>
-                            <div class="pub-authors">G. Close, <strong>W. Ravenscroft</strong>, S. Goetze, T. Hain</div>
-                            <div class="pub-venue">ICASSP 2023</div>
+                            <div class="pub-title">Perceive and Predict: Self-supervised Speech Representation Based Loss Functions for Speech Enhancement</div>
+                            <div class="pub-authors">G. Close, <strong>W. Ravenscroft</strong>, T. Hain, S. Goetze</div>
+                            <div class="pub-venue">ICASSP 2023, pp. 1-5</div>
                         </li>
-                        
-                        <li class="publication-item">
-                            <div class="pub-title">Utterance Weighted Multi-Dilation Temporal Convolution Networks for Monaural Speech Dereverberation</div>
-                            <div class="pub-authors"><strong>W. Ravenscroft</strong>, S. Goetze, T. Hain</div>
-                            <div class="pub-venue">IWAENC 2022</div>
-                        </li>
-                        
+                    </ul>
+                    
+                    <h3 style="color: #2c3e50; margin: 2rem 0 1rem 0; font-size: 1.3rem; border-left: 4px solid #9b59b6; padding-left: 1rem;">2022</h3>
+                    <ul class="publications-list">
                         <li class="publication-item">
                             <div class="pub-title">Att-TasNet: Attending to Encodings in Time-Domain Audio Speech Separation of Noisy, Reverberant Speech Mixtures</div>
                             <div class="pub-authors"><strong>W. Ravenscroft</strong>, S. Goetze, T. Hain</div>
-                            <div class="pub-venue">Frontiers in Signal Processing Vol. 2, 2022</div>
+                            <div class="pub-venue">Frontiers in Signal Processing, Vol. 2, Article 856968 • <a href="https://doi.org/10.3389/frsip.2022.856968" target="_blank" style="color: #3498db;">DOI</a></div>
+                        </li>
+                        
+                        <li class="publication-item">
+                            <div class="pub-title">Utterance Weighted Multi-Dilation Temporal Convolutional Networks for Monaural Speech Dereverberation</div>
+                            <div class="pub-authors"><strong>W. Ravenscroft</strong>, S. Goetze, T. Hain</div>
+                            <div class="pub-venue">IWAENC 2022, pp. 1-5</div>
+                        </li>
+                        
+                        <li class="publication-item">
+                            <div class="pub-title">Receptive Field Analysis of Temporal Convolutional Networks for Monaural Speech Dereverberation</div>
+                            <div class="pub-authors"><strong>W. Ravenscroft</strong>, S. Goetze, T. Hain</div>
+                            <div class="pub-venue">EUSIPCO 2022, pp. 80-84</div>
                         </li>
                     </ul>
                 </section>
@@ -543,11 +640,11 @@
             <div class="right-column">
                 <div class="stats-grid">
                     <div class="stat-card">
-                        <div class="stat-number">87</div>
+                        <div class="stat-number">106</div>
                         <div class="stat-label">Citations</div>
                     </div>
                     <div class="stat-card">
-                        <div class="stat-number">10+</div>
+                        <div class="stat-number">14</div>
                         <div class="stat-label">Publications</div>
                     </div>
                 </div>

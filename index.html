@@ -410,6 +410,71 @@
             font-weight: 500;
         }
         
+        .fun-content {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 1.5rem;
+            margin-bottom: 2rem;
+        }
+        
+        .hobby-card {
+            background: rgba(255, 255, 255, 0.9);
+            padding: 2rem;
+            border-radius: 15px;
+            text-align: center;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.08);
+            border: 2px solid transparent;
+            transition: all 0.3s ease;
+        }
+        
+        .hobby-card:hover {
+            transform: translateY(-5px);
+            border-color: rgba(25, 118, 210, 0.2);
+            box-shadow: 0 10px 25px rgba(25, 118, 210, 0.15);
+        }
+        
+        .hobby-icon {
+            font-size: 3rem;
+            margin-bottom: 1rem;
+        }
+        
+        .hobby-title {
+            font-size: 1.4rem;
+            font-weight: 600;
+            color: #0D47A1;
+            margin-bottom: 1rem;
+        }
+        
+        .hobby-description {
+            color: #555;
+            line-height: 1.6;
+        }
+        
+        .fun-fact {
+            background: linear-gradient(135deg, #1976D2 0%, #0097A7 100%);
+            color: white;
+            padding: 1.5rem;
+            border-radius: 10px;
+            text-align: center;
+            font-style: italic;
+        }
+        
+        .fun-fact strong {
+            font-weight: 600;
+        }
+        
+        .project-links a {
+            display: inline-block;
+            background: linear-gradient(135deg, #1565C0 0%, #0277BD 100%);
+            color: white;
+            padding: 0.75rem 1.5rem;
+            border-radius: 25px;
+            text-decoration: none;
+            margin: 0.5rem 0.5rem 0.5rem 0;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            font-weight: 500;
+        }
+        
         .project-links a:hover {
             transform: translateY(-2px);
             box-shadow: 0 8px 20px rgba(21, 101, 192, 0.3);
@@ -551,7 +616,7 @@
                 <section class="section">
                     <h2 class="section-title">Publications</h2>
                     
-                    <h3 style="color: #2c3e50; margin-bottom: 1rem; font-size: 1.3rem; border-left: 4px solid #3498db; padding-left: 1rem;">2025</h3>
+                    <h3 style="color: #0D47A1; margin-bottom: 1rem; font-size: 1.3rem; border-left: 4px solid #1976D2; padding-left: 1rem;">2025</h3>
                     <ul class="publications-list">
                         <li class="publication-item">
                             <div class="pub-title">AITW: The Annotated In-the-Wild Dataset for Filtering of In-the-Wild Speech Data</div>
@@ -566,7 +631,7 @@
                         </li>
                     </ul>
                     
-                    <h3 style="color: #2c3e50; margin: 2rem 0 1rem 0; font-size: 1.3rem; border-left: 4px solid #e74c3c; padding-left: 1rem;">2024</h3>
+                    <h3 style="color: #0D47A1; margin: 2rem 0 1rem 0; font-size: 1.3rem; border-left: 4px solid #0097A7; padding-left: 1rem;">2024</h3>
                     <ul class="publications-list">
                         <li class="publication-item">
                             <div class="pub-title">Speech Separation in Noisy Reverberant Acoustic Environments</div>
@@ -593,7 +658,7 @@
                         </li>
                     </ul>
                     
-                    <h3 style="color: #2c3e50; margin: 2rem 0 1rem 0; font-size: 1.3rem; border-left: 4px solid #f39c12; padding-left: 1rem;">2023</h3>
+                    <h3 style="color: #0D47A1; margin: 2rem 0 1rem 0; font-size: 1.3rem; border-left: 4px solid #2E7D32; padding-left: 1rem;">2023</h3>
                     <ul class="publications-list">
                         <li class="publication-item">
                             <div class="pub-title">On Time Domain Conformer Models for Monaural Speech Separation in Noisy Reverberant Acoustic Environments</div>
@@ -626,7 +691,7 @@
                         </li>
                     </ul>
                     
-                    <h3 style="color: #2c3e50; margin: 2rem 0 1rem 0; font-size: 1.3rem; border-left: 4px solid #9b59b6; padding-left: 1rem;">2022</h3>
+                    <h3 style="color: #0D47A1; margin: 2rem 0 1rem 0; font-size: 1.3rem; border-left: 4px solid #0277BD; padding-left: 1rem;">2022</h3>
                     <ul class="publications-list">
                         <li class="publication-item">
                             <div class="pub-title">Att-TasNet: Attending to Encodings in Time-Domain Audio Speech Separation of Noisy, Reverberant Speech Mixtures</div>
@@ -667,6 +732,35 @@
                             <div class="project-links">
                                 <a href="https://github.com/jwr1995/PubSep" target="_blank">🔗 GitHub Repository</a>
                             </div>
+                        </div>
+                    </div>
+                </section>
+                
+                <section class="section">
+                    <h2 class="section-title">Beyond Research</h2>
+                    <div class="fun-content">
+                        <div class="hobby-card">
+                            <div class="hobby-icon">🏃‍♂️</div>
+                            <h3 class="hobby-title">Ultra Trail & Mountain Running</h3>
+                            <p class="hobby-description">
+                                Recently finished the <a href="https://www.ultratrailsnowdonia.com/" target="_blank" style="color: #1976D2; text-decoration: none;">Ultra-Trail Snowdonia 100M</a> covering 100 miles and 10,000m of elevation over 10+ mountains in 41 hours. Hoping to get a place at <a href="https://utmb.world/" target="_blank" style="color: #1976D2; text-decoration: none;">UTMB</a> next year.
+                            </p>
+                        </div>
+                        
+                        <div class="hobby-card">
+                            <div class="hobby-icon">🏊‍♂️</div>
+                            <h3 class="hobby-title">Triathlon</h3>
+                            <p class="hobby-description">
+                                Currently training for the <a href="https://www.ironman.com/im703-weymouth" target="_blank" style="color: #1976D2; text-decoration: none;">Weymouth Half Ironman</a>. Enjoying the cycling and running parts... less enthusiastic about the swimming training!
+                            </p>
+                        </div>
+                        
+                        <div class="hobby-card">
+                            <div class="hobby-icon">⛷️</div>
+                            <h3 class="hobby-title">Skiing</h3>
+                            <p class="hobby-description">
+                                Love getting out on the slopes whenever I can. Great way to switch off from everything else.
+                            </p>
                         </div>
                     </div>
                 </section>
@@ -713,30 +807,17 @@
                     <p style="font-size: 0.9rem; color: #555; margin-top: 0.5rem;"><em>IET Accredited</em></p>
                 </div>
                 
-                <h3 style="color: #2c3e50; margin: 2rem 0 1rem 0; font-size: 1.3rem;">Technical Skills</h3>
+                <h3 style="color: #0D47A1; margin: 2rem 0 1rem 0; font-size: 1.3rem;">Technical Skills</h3>
                 <div style="display: flex; flex-wrap: wrap; gap: 0.5rem;">
-                    <span style="background: #3498db; color: white; padding: 0.3rem 0.8rem; border-radius: 15px; font-size: 0.8rem;">Python</span>
-                    <span style="background: #e74c3c; color: white; padding: 0.3rem 0.8rem; border-radius: 15px; font-size: 0.8rem;">PyTorch</span>
-                    <span style="background: #f39c12; color: white; padding: 0.3rem 0.8rem; border-radius: 15px; font-size: 0.8rem;">TensorFlow</span>
-                    <span style="background: #9b59b6; color: white; padding: 0.3rem 0.8rem; border-radius: 15px; font-size: 0.8rem;">SpeechBrain</span>
-                    <span style="background: #2ecc71; color: white; padding: 0.3rem 0.8rem; border-radius: 15px; font-size: 0.8rem;">Git</span>
-                    <span style="background: #34495e; color: white; padding: 0.3rem 0.8rem; border-radius: 15px; font-size: 0.8rem;">SLURM</span>
-                    <span style="background: #16a085; color: white; padding: 0.3rem 0.8rem; border-radius: 15px; font-size: 0.8rem;">ESPNet</span>
-                    <span style="background: #8e44ad; color: white; padding: 0.3rem 0.8rem; border-radius: 15px; font-size: 0.8rem;">MATLAB</span>
-                    <span style="background: #27ae60; color: white; padding: 0.3rem 0.8rem; border-radius: 15px; font-size: 0.8rem;">C++</span>
-                </div>
-                
-                <h3 style="color: #2c3e50; margin: 2rem 0 1rem 0; font-size: 1.3rem;">Leadership</h3>
-                <div class="education-item">
-                    <div class="degree">President</div>
-                    <div class="institution">University of Sheffield Speech and Language Technology Society</div>
-                    <div class="duration">2023-2024</div>
-                </div>
-                
-                <div class="education-item">
-                    <div class="degree">Publicity Officer</div>
-                    <div class="institution">University of Sheffield Speech and Language Technology Society</div>
-                    <div class="duration">2022-2023</div>
+                    <span style="background: #1976D2; color: white; padding: 0.3rem 0.8rem; border-radius: 15px; font-size: 0.8rem;">Python</span>
+                    <span style="background: #0097A7; color: white; padding: 0.3rem 0.8rem; border-radius: 15px; font-size: 0.8rem;">PyTorch</span>
+                    <span style="background: #2E7D32; color: white; padding: 0.3rem 0.8rem; border-radius: 15px; font-size: 0.8rem;">TensorFlow</span>
+                    <span style="background: #1565C0; color: white; padding: 0.3rem 0.8rem; border-radius: 15px; font-size: 0.8rem;">SpeechBrain</span>
+                    <span style="background: #0277BD; color: white; padding: 0.3rem 0.8rem; border-radius: 15px; font-size: 0.8rem;">Git</span>
+                    <span style="background: #00695C; color: white; padding: 0.3rem 0.8rem; border-radius: 15px; font-size: 0.8rem;">SLURM</span>
+                    <span style="background: #1976D2; color: white; padding: 0.3rem 0.8rem; border-radius: 15px; font-size: 0.8rem;">ESPNet</span>
+                    <span style="background: #0097A7; color: white; padding: 0.3rem 0.8rem; border-radius: 15px; font-size: 0.8rem;">MATLAB</span>
+                    <span style="background: #2E7D32; color: white; padding: 0.3rem 0.8rem; border-radius: 15px; font-size: 0.8rem;">C++</span>
                 </div>
             </div>
         </div>

@@ -13,17 +13,17 @@
         }
         
         body {
-            font-family: 'Georgia', serif;
+            font-family: '-apple-system', 'BlinkMacSystemFont', 'Segoe UI', 'Roboto', 'Inter', 'Helvetica Neue', Arial, sans-serif;
             line-height: 1.6;
             color: #333;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            background: linear-gradient(135deg, #1976D2 0%, #0097A7 100%);
             min-height: 100vh;
         }
         
         .container {
             max-width: 1200px;
             margin: 0 auto;
-            background: rgba(255, 255, 255, 0.95);
+            background: rgba(250, 251, 252, 0.97);
             backdrop-filter: blur(10px);
             border-radius: 20px;
             margin-top: 2rem;
@@ -33,7 +33,7 @@
         }
         
         .header {
-            background: linear-gradient(135deg, #2c3e50 0%, #34495e 100%);
+            background: linear-gradient(135deg, #0D47A1 0%, #01579B 100%);
             color: white;
             padding: 3rem 2rem;
             text-align: center;
@@ -115,15 +115,15 @@
         .name {
             font-size: 3.5rem;
             margin-bottom: 0.5rem;
-            font-weight: 300;
-            letter-spacing: 2px;
+            font-weight: 700;
+            letter-spacing: -0.5px;
         }
         
         .title {
             font-size: 1.3rem;
             margin-bottom: 1rem;
             opacity: 0.9;
-            font-weight: 300;
+            font-weight: 500;
         }
         
         .contact-info {
@@ -195,11 +195,13 @@
         
         .section-title {
             font-size: 2rem;
-            color: #2c3e50;
+            color: #0D47A1;
             margin-bottom: 1.5rem;
             padding-bottom: 0.5rem;
-            border-bottom: 3px solid #3498db;
+            border-bottom: 3px solid #1976D2;
             position: relative;
+            font-weight: 700;
+            letter-spacing: -0.5px;
         }
         
         .section-title::after {
@@ -209,7 +211,7 @@
             bottom: -3px;
             width: 50px;
             height: 3px;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            background: linear-gradient(135deg, #0097A7 0%, #2E7D32 100%);
             border-radius: 3px;
         }
         
@@ -217,10 +219,10 @@
             font-size: 1.1rem;
             line-height: 1.8;
             color: #555;
-            background: linear-gradient(135deg, #f8f9fa 0%, #ffffff 100%);
+            background: linear-gradient(135deg, #fafbfc 0%, #f8f9fa 100%);
             padding: 2rem;
             border-radius: 10px;
-            border-left: 5px solid #3498db;
+            border-left: 5px solid #1976D2;
         }
         
         .research-interests {
@@ -231,7 +233,7 @@
         }
         
         .interest-card {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            background: linear-gradient(135deg, #1976D2 0%, #0097A7 100%);
             color: white;
             padding: 1.5rem;
             border-radius: 10px;
@@ -242,7 +244,7 @@
         
         .interest-card:hover {
             transform: translateY(-5px);
-            box-shadow: 0 15px 30px rgba(102, 126, 234, 0.3);
+            box-shadow: 0 15px 30px rgba(25, 118, 210, 0.3);
         }
         
         .publications-list {
@@ -250,12 +252,12 @@
         }
         
         .publication-item {
-            background: white;
+            background: rgba(255, 255, 255, 0.9);
             padding: 1.5rem;
             margin-bottom: 1rem;
             border-radius: 10px;
             box-shadow: 0 5px 15px rgba(0, 0, 0, 0.08);
-            border-left: 4px solid #3498db;
+            border-left: 4px solid #1976D2;
             transition: transform 0.3s ease, box-shadow 0.3s ease;
         }
         
@@ -265,8 +267,8 @@
         }
         
         .pub-title {
-            font-weight: bold;
-            color: #2c3e50;
+            font-weight: 600;
+            color: #0D47A1;
             margin-bottom: 0.5rem;
             font-size: 1.1rem;
         }
@@ -277,13 +279,13 @@
         }
         
         .pub-venue {
-            color: #3498db;
+            color: #1976D2;
             font-style: italic;
-            font-weight: 600;
+            font-weight: 500;
         }
         
         .employment-item {
-            background: white;
+            background: rgba(255, 255, 255, 0.9);
             padding: 2rem;
             margin-bottom: 1.5rem;
             border-radius: 10px;
@@ -299,19 +301,19 @@
             left: 0;
             width: 4px;
             height: 100%;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            background: linear-gradient(135deg, #1976D2 0%, #0097A7 100%);
         }
         
         .job-title {
             font-size: 1.3rem;
-            font-weight: bold;
-            color: #2c3e50;
+            font-weight: 600;
+            color: #0D47A1;
             margin-bottom: 0.5rem;
         }
         
         .company-date {
-            color: #3498db;
-            font-weight: 600;
+            color: #1976D2;
+            font-weight: 500;
             margin-bottom: 1rem;
         }
         
@@ -332,11 +334,30 @@
         }
         
         .stat-card {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            background: linear-gradient(135deg, #1565C0 0%, #0277BD 100%);
             color: white;
             padding: 1.5rem;
             border-radius: 10px;
             text-align: center;
+            transition: all 0.3s ease;
+        }
+        
+        .stat-card-link {
+            text-decoration: none;
+            color: inherit;
+            display: block;
+            transition: transform 0.3s ease;
+        }
+        
+        .stat-card-link:hover {
+            transform: translateY(-3px);
+            text-decoration: none;
+            color: inherit;
+        }
+        
+        .stat-card-link:hover .stat-card {
+            background: linear-gradient(135deg, #0D47A1 0%, #01579B 100%);
+            box-shadow: 0 8px 25px rgba(21, 101, 192, 0.4);
         }
         
         .stat-number {
@@ -351,23 +372,23 @@
         }
         
         .education-item {
-            background: white;
+            background: rgba(255, 255, 255, 0.9);
             padding: 1.5rem;
             margin-bottom: 1rem;
             border-radius: 10px;
             box-shadow: 0 5px 15px rgba(0, 0, 0, 0.08);
-            border-left: 4px solid #e74c3c;
+            border-left: 4px solid #0097A7;
         }
         
         .degree {
-            font-weight: bold;
-            color: #2c3e50;
+            font-weight: 600;
+            color: #0D47A1;
             margin-bottom: 0.5rem;
         }
         
         .institution {
-            color: #e74c3c;
-            font-weight: 600;
+            color: #0097A7;
+            font-weight: 500;
             margin-bottom: 0.25rem;
         }
         
@@ -379,18 +400,20 @@
         
         .project-links a {
             display: inline-block;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            background: linear-gradient(135deg, #1565C0 0%, #0277BD 100%);
             color: white;
             padding: 0.75rem 1.5rem;
             border-radius: 25px;
             text-decoration: none;
             margin: 0.5rem 0.5rem 0.5rem 0;
             transition: transform 0.3s ease, box-shadow 0.3s ease;
+            font-weight: 500;
         }
         
         .project-links a:hover {
             transform: translateY(-2px);
-            box-shadow: 0 8px 20px rgba(102, 126, 234, 0.3);
+            box-shadow: 0 8px 20px rgba(21, 101, 192, 0.3);
+            background: linear-gradient(135deg, #0D47A1 0%, #01579B 100%);
         }
         
         @media (max-width: 768px) {
@@ -437,7 +460,7 @@
         <header class="header">
             <div class="header-content">
                 <div class="profile-section">
-                    <img class="profile-image" src="IMG_20190922_191150.jpg" alt="Dr. William Ravenscroft" />
+                    <img class="profile-image" src="./IMG_20190922_191150.jpg" alt="Dr. William Ravenscroft" />
                     <div class="name-title-section">
                         <h1 class="name">Dr. William Ravenscroft</h1>
                         <p class="title">PhD, MSc, MEng (Hons), PGDip</p>
@@ -651,14 +674,18 @@
             
             <div class="right-column">
                 <div class="stats-grid">
-                    <div class="stat-card">
-                        <div class="stat-number">106</div>
-                        <div class="stat-label">Citations</div>
-                    </div>
-                    <div class="stat-card">
-                        <div class="stat-number">14</div>
-                        <div class="stat-label">Publications</div>
-                    </div>
+                    <a href="https://scholar.google.co.uk/citations?user=MrFn0HIAAAAJ&hl=en" target="_blank" class="stat-card-link">
+                        <div class="stat-card">
+                            <div class="stat-number">106</div>
+                            <div class="stat-label">Citations</div>
+                        </div>
+                    </a>
+                    <a href="https://scholar.google.co.uk/citations?user=MrFn0HIAAAAJ&hl=en" target="_blank" class="stat-card-link">
+                        <div class="stat-card">
+                            <div class="stat-number">14</div>
+                            <div class="stat-label">Publications</div>
+                        </div>
+                    </a>
                 </div>
                 
                 <h3 style="color: #2c3e50; margin-bottom: 1rem; font-size: 1.3rem;">Education</h3>

@@ -1,0 +1,274 @@
+name: Test Citation Update Workflow
+
+on:
+  workflow_dispatch:  # Manual trigger only for testing
+
+jobs:
+  test-citation-update:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+          
+      - name: Install dependencies
+        run: |
+          pip install requests pytest
+          
+      - name: Run pre-flight checks
+        run: |
+          echo "=== Pre-flight Checks ==="
+          echo "✓ Python version: $(python --version)"
+          echo "✓ Repository: $(pwd)"
+          echo "✓ Branch: $(git branch --show-current)"
+          echo "✓ Current citation-data.json:"
+          cat citation-data.json
+          echo ""
+          echo "✓ Current citation count in index.html:"
+          grep -A 1 'id="citation-count"' index.html | head -1
+          
+      - name: Test API key configuration
+        env:
+          SERPAPI_KEY: ${{ secrets.SERPAPI_KEY }}
+        run: |
+          python << 'EOF'
+          import os
+          
+          api_key = os.environ.get('SERPAPI_KEY')
+          
+          if not api_key:
+              print("❌ FAIL: SERPAPI_KEY secret is not configured")
+              exit(1)
+          
+          if api_key == 'YOUR_SERPAPI_KEY_HERE':
+              print("❌ FAIL: SERPAPI_KEY is still the placeholder value")
+              exit(1)
+              
+          if len(api_key) < 10:
+              print("❌ FAIL: SERPAPI_KEY appears to be invalid (too short)")
+              exit(1)
+          
+          print("✓ PASS: SERPAPI_KEY is configured")
+          print(f"✓ Key length: {len(api_key)} characters")
+          EOF
+          
+      - name: Test API connection
+        env:
+          SERPAPI_KEY: ${{ secrets.SERPAPI_KEY }}
+          SCHOLAR_AUTHOR_ID: MrFn0HIAAAAJ
+        run: |
+          python << 'EOF'
+          import requests
+          import os
+          
+          api_key = os.environ.get('SERPAPI_KEY')
+          author_id = os.environ.get('SCHOLAR_AUTHOR_ID')
+          
+          url = f"https://serpapi.com/search.json?engine=google_scholar_author&author_id={author_id}&api_key={api_key}"
+          
+          print("Testing SerpApi connection...")
+          try:
+              response = requests.get(url, timeout=10)
+              print(f"✓ Response status: {response.status_code}")
+              
+              if response.status_code == 200:
+                  print("✓ PASS: Successfully connected to SerpApi")
+                  data = response.json()
+                  
+                  if 'error' in data:
+                      print(f"❌ FAIL: API returned error: {data['error']}")
+                      exit(1)
+                  
+                  if 'cited_by' in data:
+                      print("✓ PASS: Citation data found in response")
+                      if 'table' in data['cited_by']:
+                          citations = data['cited_by']['table'][0]['citations']['all']
+                          print(f"✓ Current citation count: {citations}")
+                      else:
+                          print("❌ FAIL: No citation table in response")
+                          exit(1)
+                  else:
+                      print("❌ FAIL: No cited_by data in response")
+                      print(f"Response keys: {list(data.keys())}")
+                      exit(1)
+                      
+              elif response.status_code == 401:
+                  print("❌ FAIL: Authentication failed - check your API key")
+                  exit(1)
+              elif response.status_code == 429:
+                  print("⚠ WARNING: Rate limit reached")
+                  exit(1)
+              else:
+                  print(f"❌ FAIL: Unexpected status code: {response.status_code}")
+                  print(f"Response: {response.text[:200]}")
+                  exit(1)
+                  
+          except requests.exceptions.Timeout:
+              print("❌ FAIL: Request timed out")
+              exit(1)
+          except Exception as e:
+              print(f"❌ FAIL: {type(e).__name__}: {e}")
+              exit(1)
+          EOF
+          
+      - name: Test citation data extraction
+        env:
+          SERPAPI_KEY: ${{ secrets.SERPAPI_KEY }}
+          SCHOLAR_AUTHOR_ID: MrFn0HIAAAAJ
+        run: |
+          python << 'EOF'
+          import requests
+          import json
+          import os
+          from datetime import datetime
+          
+          api_key = os.environ.get('SERPAPI_KEY')
+          author_id = os.environ.get('SCHOLAR_AUTHOR_ID')
+          
+          url = f"https://serpapi.com/search.json?engine=google_scholar_author&author_id={author_id}&api_key={api_key}"
+          
+          print("Testing citation data extraction...")
+          response = requests.get(url)
+          data = response.json()
+          
+          # Extract citation count
+          citations_all = data['cited_by']['table'][0]['citations']['all']
+          print(f"✓ Extracted citation count: {citations_all}")
+          
+          # Create test citation data
+          citation_data = {
+              'citations': citations_all,
+              'lastUpdated': datetime.utcnow().isoformat() + 'Z'
+          }
+          
+          # Save to test file
+          with open('citation-data-test.json', 'w') as f:
+              json.dump(citation_data, f, indent=2)
+          
+          print("✓ PASS: Citation data extracted successfully")
+          print(f"✓ Test file created: citation-data-test.json")
+          
+          # Verify file can be read back
+          with open('citation-data-test.json', 'r') as f:
+              test_data = json.load(f)
+          
+          assert test_data['citations'] == citations_all, "Citation count mismatch"
+          assert 'lastUpdated' in test_data, "Missing lastUpdated field"
+          print("✓ PASS: Citation data file is valid")
+          EOF
+          
+      - name: Test HTML update logic
+        run: |
+          # Create a test HTML file
+          cat > test-index.html << 'HTMLEOF'
+          <!DOCTYPE html>
+          <html>
+          <body>
+            <div class="stat-number" id="citation-count">114</div>
+          </body>
+          </html>
+          HTMLEOF
+          
+          # Extract citation count from test file
+          CITATIONS=$(python -c "import json; print(json.load(open('citation-data-test.json'))['citations'])")
+          echo "Test citation count: $CITATIONS"
+          
+          # Test sed command
+          sed -i "s/<div class=\"stat-number\" id=\"citation-count\">[0-9]*<\/div>/<div class=\"stat-number\" id=\"citation-count\">$CITATIONS<\/div>/" test-index.html
+          
+          # Verify update
+          if grep -q "id=\"citation-count\">$CITATIONS<" test-index.html; then
+              echo "✓ PASS: HTML update logic works correctly"
+              echo "Updated HTML:"
+              cat test-index.html
+          else
+              echo "❌ FAIL: HTML update did not work"
+              cat test-index.html
+              exit 1
+          fi
+          
+      - name: Run full integration test (dry run)
+        env:
+          SERPAPI_KEY: ${{ secrets.SERPAPI_KEY }}
+          SCHOLAR_AUTHOR_ID: MrFn0HIAAAAJ
+        run: |
+          python << 'EOF'
+          import requests
+          import json
+          import os
+          from datetime import datetime
+          
+          print("\n=== Running Full Integration Test ===\n")
+          
+          # Get environment variables
+          api_key = os.environ.get('SERPAPI_KEY')
+          author_id = os.environ.get('SCHOLAR_AUTHOR_ID')
+          
+          # Fetch citation data from SerpApi
+          url = f"https://serpapi.com/search.json?engine=google_scholar_author&author_id={author_id}&api_key={api_key}"
+          
+          try:
+              print("1. Fetching citation data from SerpApi...")
+              response = requests.get(url)
+              response.raise_for_status()
+              data = response.json()
+              
+              # Extract citation count
+              if 'cited_by' in data and 'table' in data['cited_by']:
+                  citations_all = data['cited_by']['table'][0]['citations']['all']
+                  
+                  print(f"✓ Citation count retrieved: {citations_all}")
+                  
+                  # Create citation data
+                  citation_data = {
+                      'citations': citations_all,
+                      'lastUpdated': datetime.utcnow().isoformat() + 'Z'
+                  }
+                  
+                  print(f"2. Citation data prepared:")
+                  print(f"   - Citations: {citation_data['citations']}")
+                  print(f"   - Last Updated: {citation_data['lastUpdated']}")
+                  
+                  # Read current data
+                  with open('citation-data.json', 'r') as f:
+                      current_data = json.load(f)
+                  
+                  print(f"3. Current citation count: {current_data['citations']}")
+                  
+                  if current_data['citations'] == citations_all:
+                      print("   ℹ No update needed - citation count unchanged")
+                  else:
+                      print(f"   ⚠ Citation count would change: {current_data['citations']} → {citations_all}")
+                  
+                  print("\n✓ PASS: Integration test completed successfully")
+                  print("✓ All systems operational")
+                  
+              else:
+                  print("❌ FAIL: Could not find citation data in response")
+                  exit(1)
+                  
+          except Exception as e:
+              print(f"❌ FAIL: Integration test failed: {e}")
+              exit(1)
+          EOF
+          
+      - name: Test summary
+        if: always()
+        run: |
+          echo ""
+          echo "=========================================="
+          echo "       CITATION UPDATE TEST SUMMARY       "
+          echo "=========================================="
+          echo ""
+          echo "All tests completed. Check the logs above for results."
+          echo ""
+          echo "To run the actual update workflow:"
+          echo "  Go to Actions → Update Citation Count → Run workflow"
+          echo ""

@@ -38,15 +38,50 @@ The citation count on your website is automatically updated once per day by a Gi
 3. Check **Allow GitHub Actions to create and approve pull requests** if needed
 4. Save changes
 
-### 4. Verify the Workflow
+### 4. Test the Setup
 
-The workflow is now configured and will run automatically. To test it:
+Before running the actual workflow, you should test the configuration:
+
+#### Option A: Run the Test Workflow (Recommended)
+
+1. Go to the **Actions** tab in your repository
+2. Click on **Test Citation Update Workflow**
+3. Click **Run workflow** → **Run workflow**
+4. Wait for the test to complete (should take less than 30 seconds)
+5. Review the test results to ensure everything is configured correctly
+
+The test workflow will verify:
+- ✓ API key is properly configured
+- ✓ Connection to SerpApi works
+- ✓ Citation data can be retrieved
+- ✓ Data extraction logic works
+- ✓ HTML update logic works
+
+#### Option B: Run Local Test Script
+
+You can also test locally before running on GitHub:
+
+```bash
+# Set your API key (for local testing only)
+export SERPAPI_KEY='your_api_key_here'
+
+# Run the test script
+python test-citation-workflow.py
+```
+
+The local test will verify your API key and connection without making any changes to your files.
+
+### 5. Run the Citation Update Workflow
+
+Once testing is complete and successful:
 
 1. Go to the **Actions** tab in your repository
 2. Click on **Update Citation Count** workflow
 3. Click **Run workflow** → **Run workflow** to manually trigger it
 4. Wait for the workflow to complete (should take less than 30 seconds)
 5. Check the commit history to see the automated update
+
+The workflow will then run automatically every day at 2 AM UTC.
 
 ## How It Works
 
@@ -109,6 +144,27 @@ env:
 ```
 
 ## Troubleshooting
+
+### Test Workflow Issues
+
+**Test fails with "SERPAPI_KEY secret not configured"**
+- Ensure you've added the secret in Settings → Secrets and variables → Actions
+- The secret name must be exactly `SERPAPI_KEY` (case-sensitive)
+
+**Test fails with "Authentication failed"**
+- Your API key may be invalid or expired
+- Log in to SerpApi dashboard and verify your API key
+- Try regenerating a new API key
+
+**Test fails with "Rate limit exceeded"**
+- You've used up your monthly quota (250 searches for free tier)
+- Wait for quota to reset at the beginning of the month
+- Or upgrade your SerpApi plan
+
+**Test fails with "No citation data in response"**
+- The Google Scholar author ID may be incorrect
+- Verify the author ID in the workflow file matches your Google Scholar profile
+- Check if your Google Scholar profile is public
 
 ### Workflow Fails
 

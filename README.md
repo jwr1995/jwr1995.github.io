@@ -4,6 +4,8 @@ My github.io site
 
 ### Auto-updating Citation Count
 
-This site includes an automatic citation count updater that fetches the latest citation count from Google Scholar using SerpApi. The citation count updates at most once per day when someone visits the website.
+This site includes an automatic citation count updater powered by GitHub Actions and SerpApi. The citation count is fetched securely from Google Scholar once per day and updated automatically.
 
-**Setup:** See [CITATION_SETUP.md](CITATION_SETUP.md) for detailed instructions on configuring your SerpApi API key.
+**Setup:** See [CITATION_SETUP.md](CITATION_SETUP.md) for detailed instructions on configuring your SerpApi API key as a GitHub Secret.
+
+**Security:** The API key is stored securely as a GitHub Secret and never exposed in client-side code.

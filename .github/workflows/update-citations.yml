@@ -1,0 +1,107 @@
+name: Update Citation Count
+
+on:
+  schedule:
+    # Run once per day at 2 AM UTC
+    - cron: '0 2 * * *'
+  workflow_dispatch: # Allow manual triggering
+
+jobs:
+  update-citations:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write  # Needed to commit and push changes
+    
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+          
+      - name: Install dependencies
+        run: |
+          pip install requests
+          
+      - name: Fetch citation count
+        env:
+          SERPAPI_KEY: ${{ secrets.SERPAPI_KEY }}
+          SCHOLAR_AUTHOR_ID: MrFn0HIAAAAJ
+        run: |
+          python << 'EOF'
+          import requests
+          import json
+          import os
+          from datetime import datetime
+          
+          # Get environment variables
+          api_key = os.environ.get('SERPAPI_KEY')
+          author_id = os.environ.get('SCHOLAR_AUTHOR_ID')
+          
+          if not api_key:
+              print("Error: SERPAPI_KEY secret not configured")
+              exit(1)
+          
+          # Fetch citation data from SerpApi
+          url = f"https://serpapi.com/search.json?engine=google_scholar_author&author_id={author_id}&api_key={api_key}"
+          
+          try:
+              response = requests.get(url)
+              response.raise_for_status()
+              data = response.json()
+              
+              # Extract citation count
+              if 'cited_by' in data and 'table' in data['cited_by']:
+                  citations_all = data['cited_by']['table'][0]['citations']['all']
+                  
+                  # Update citation-data.json
+                  citation_data = {
+                      'citations': citations_all,
+                      'lastUpdated': datetime.utcnow().isoformat() + 'Z'
+                  }
+                  
+                  with open('citation-data.json', 'w') as f:
+                      json.dump(citation_data, f, indent=2)
+                  
+                  print(f"Successfully updated citation count to {citations_all}")
+                  
+                  # Set output for commit message
+                  with open(os.environ['GITHUB_OUTPUT'], 'a') as f:
+                      f.write(f"citations={citations_all}\n")
+              else:
+                  print("Error: Could not find citation data in response")
+                  exit(1)
+                  
+          except Exception as e:
+              print(f"Error fetching citation data: {e}")
+              exit(1)
+          EOF
+          
+      - name: Update index.html with new citation count
+        id: update-html
+        run: |
+          # Extract citation count from citation-data.json
+          CITATIONS=$(python -c "import json; print(json.load(open('citation-data.json'))['citations'])")
+          
+          # Update the citation count in index.html
+          sed -i "s/<div class=\"stat-number\" id=\"citation-count\">[0-9]*<\/div>/<div class=\"stat-number\" id=\"citation-count\">$CITATIONS<\/div>/" index.html
+          
+          echo "Updated citation count to $CITATIONS in index.html"
+          
+      - name: Commit and push if changed
+        run: |
+          git config --global user.name 'github-actions[bot]'
+          git config --global user.email 'github-actions[bot]@users.noreply.github.com'
+          
+          git add citation-data.json index.html
+          
+          if git diff --staged --quiet; then
+            echo "No changes to commit"
+          else
+            CITATIONS=$(python -c "import json; print(json.load(open('citation-data.json'))['citations'])")
+            git commit -m "Update citation count to $CITATIONS"
+            git push
+            echo "Changes committed and pushed"
+          fi

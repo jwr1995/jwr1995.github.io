@@ -1,0 +1,775 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex, nofollow">
+<title>Stag Bingo</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Anton&family=Barlow+Semi+Condensed:wght@500;600&family=Space+Mono:wght@700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --ink:#0E2A22;
+    --ink-soft:#4A6157;
+    --paper:#FDFCF8;
+    --rule:#C3CDC5;
+    --dauber:#CE1B6B;
+    --amber:#C98A22;
+  }
+  *{box-sizing:border-box;}
+  [hidden]{display:none!important;}
+  html,body{margin:0;padding:0;}
+  body{
+    background:var(--ink);
+    color:var(--ink);
+    font-family:"Barlow Semi Condensed",-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
+    -webkit-font-smoothing:antialiased;
+  }
+
+  /* ---------- masthead ---------- */
+  .masthead{
+    padding:22px 16px 14px;
+    text-align:center;
+    color:var(--paper);
+  }
+  .masthead h1{
+    font-family:"Anton",Impact,sans-serif;
+    font-size:clamp(28px,8vw,44px);
+    letter-spacing:.02em;
+    line-height:.95;
+    margin:0;
+    text-transform:uppercase;
+  }
+  .masthead .where{
+    font-family:"Space Mono",monospace;
+    font-size:11px;
+    letter-spacing:.22em;
+    text-transform:uppercase;
+    margin-top:10px;
+    color:#9FBDAF;
+  }
+
+  /* ---------- controls ---------- */
+  .controls{
+    padding:0 12px 20px;
+    display:flex;
+    flex-wrap:wrap;
+    gap:6px;
+    justify-content:center;
+  }
+  .tab{
+    font-family:"Space Mono",monospace;
+    font-size:12px;
+    letter-spacing:.1em;
+    text-transform:uppercase;
+    background:transparent;
+    color:#9FBDAF;
+    border:1px solid #2F5245;
+    border-radius:2px;
+    padding:9px 13px;
+    cursor:pointer;
+  }
+  .tab[aria-selected="true"]{
+    background:var(--paper);
+    color:var(--ink);
+    border-color:var(--paper);
+  }
+  .tab:focus-visible,.util:focus-visible{outline:2px solid var(--amber);outline-offset:2px;}
+  .utils{
+    padding:0 12px 26px;
+    display:flex;
+    gap:8px;
+    justify-content:center;
+  }
+  .util{
+    font-family:"Space Mono",monospace;
+    font-size:11px;
+    letter-spacing:.14em;
+    text-transform:uppercase;
+    background:none;
+    border:none;
+    border-bottom:1px solid #3A6153;
+    color:#7FA994;
+    padding:4px 2px;
+    cursor:pointer;
+  }
+
+  /* ---------- name gate ---------- */
+  .gate{
+    max-width:340px;
+    margin:8px auto 34px;
+    padding:0 22px;
+    text-align:center;
+  }
+  .gate[hidden]{display:none;}
+  .gate-q{
+    font-family:"Anton",Impact,sans-serif;
+    font-size:22px;
+    text-transform:uppercase;
+    color:var(--paper);
+    margin:0 0 14px;
+  }
+  .gate-input{
+    width:100%;
+    font-family:"Barlow Semi Condensed",sans-serif;
+    font-size:17px;
+    text-align:center;
+    background:var(--paper);
+    color:var(--ink);
+    border:none;
+    border-radius:2px;
+    padding:12px 10px;
+  }
+  .gate-input:focus-visible{outline:2px solid var(--amber);outline-offset:2px;}
+  .gate-go{
+    width:100%;
+    margin-top:8px;
+    font-family:"Space Mono",monospace;
+    font-size:12px;
+    letter-spacing:.16em;
+    text-transform:uppercase;
+    background:var(--dauber);
+    color:#fff;
+    border:none;
+    border-radius:2px;
+    padding:12px;
+    cursor:pointer;
+  }
+  .gate-err{
+    font-family:"Space Mono",monospace;
+    font-size:11px;
+    color:var(--amber);
+    margin:12px 0 0;
+  }
+  .gate-err[hidden]{display:none;}
+
+  /* ---------- card ---------- */
+  .card{
+    background:var(--paper);
+    max-width:560px;
+    margin:0 auto 28px;
+    padding:20px 18px 26px;
+    border-radius:3px;
+  }
+  .card[hidden]{display:none;}
+  .card-head{
+    display:flex;
+    align-items:flex-end;
+    justify-content:space-between;
+    gap:12px;
+    border-bottom:2px solid var(--ink);
+    padding-bottom:10px;
+  }
+  .player{
+    font-family:"Anton",Impact,sans-serif;
+    font-size:clamp(26px,7vw,34px);
+    text-transform:uppercase;
+    line-height:.9;
+    margin:0;
+  }
+  .player small{
+    display:block;
+    font-family:"Space Mono",monospace;
+    font-size:10px;
+    letter-spacing:.2em;
+    color:var(--ink-soft);
+    margin-bottom:5px;
+  }
+  .serial{
+    font-family:"Space Mono",monospace;
+    font-size:10px;
+    letter-spacing:.12em;
+    color:var(--amber);
+    white-space:nowrap;
+  }
+
+  .letters{
+    display:grid;
+    grid-template-columns:repeat(5,1fr);
+    gap:4px;
+    margin:12px 0 4px;
+  }
+  .letters span{
+    font-family:"Anton",Impact,sans-serif;
+    font-size:clamp(22px,6.5vw,30px);
+    text-align:center;
+    color:var(--ink);
+    line-height:1;
+  }
+
+  .grid{
+    display:grid;
+    grid-template-columns:repeat(5,1fr);
+    gap:4px;
+    margin-top:14px;
+  }
+  .sq{
+    position:relative;
+    aspect-ratio:1/1;
+    border:1px solid var(--rule);
+    background:none;
+    font:inherit;
+    font-weight:500;
+    font-size:clamp(8.5px,2.5vw,12px);
+    line-height:1.15;
+    color:var(--ink);
+    padding:5px 3px;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    text-align:center;
+    cursor:pointer;
+    overflow:hidden;
+    -webkit-tap-highlight-color:transparent;
+  }
+  .sq:focus-visible{outline:2px solid var(--amber);outline-offset:-2px;}
+  .sq span{position:relative;z-index:2;}
+
+  .sq::after{
+    content:"";
+    position:absolute;
+    inset:9%;
+    background:radial-gradient(circle at 42% 38%, var(--dauber) 0 62%, rgba(206,27,107,.82) 63% 100%);
+    border-radius:48% 52% 45% 55% / 52% 46% 54% 48%;
+    mix-blend-mode:multiply;
+    opacity:0;
+    transform:scale(.2) rotate(var(--tilt,0deg));
+    transition:transform .18s cubic-bezier(.3,1.5,.5,1),opacity .12s ease;
+    z-index:1;
+  }
+  .sq.dabbed::after{opacity:.88;transform:scale(1) rotate(var(--tilt,0deg));}
+  .sq.dabbed span{color:#FFF;}
+
+  .sq.free{
+    border-color:var(--amber);
+    cursor:default;
+    padding:0;
+    background-color:var(--paper);
+    background-image:url("tom.png");
+    background-size:92% auto;
+    background-position:center bottom;
+    background-repeat:no-repeat;
+  }
+  .sq.free::after{display:none;}
+  @media print{
+    .sq.free{-webkit-print-color-adjust:exact;print-color-adjust:exact;}
+  }
+
+  .rule-list{
+    margin:16px 0 0;
+    padding:0 0 0 22px;
+    font-size:15px;
+    line-height:1.45;
+  }
+  .rule-list li{margin-bottom:11px;padding-left:4px;color:var(--ink-soft);}
+  .calls-head{
+    font-family:"Space Mono",monospace;
+    font-size:10px;
+    letter-spacing:.22em;
+    text-transform:uppercase;
+    color:var(--dauber);
+    margin:22px 0 0;
+    padding-top:14px;
+    border-top:2px solid var(--ink);
+  }
+  .rule-list.calls{margin-top:10px;}
+  .rule-list.calls li{color:var(--ink);font-weight:600;}
+  .rule-list.calls li::marker{color:var(--dauber);}
+  .rule-list li::marker{
+    font-family:"Space Mono",monospace;
+    font-size:12px;
+    color:var(--amber);
+  }
+
+  .card-foot{
+    display:flex;
+    justify-content:space-between;
+    gap:10px;
+    margin-top:12px;
+    font-family:"Space Mono",monospace;
+    font-size:10px;
+    font-weight:700;
+    letter-spacing:.1em;
+    text-transform:uppercase;
+    color:var(--ink);
+  }
+
+  /* ---------- call ---------- */
+  .call{
+    position:fixed;
+    left:50%;
+    bottom:18px;
+    transform:translate(-50%,140%);
+    background:var(--dauber);
+    color:#fff;
+    font-family:"Anton",Impact,sans-serif;
+    font-size:16px;
+    letter-spacing:.08em;
+    text-transform:uppercase;
+    padding:12px 22px;
+    border-radius:2px;
+    transition:transform .3s cubic-bezier(.2,1.3,.4,1);
+    z-index:10;
+  }
+  .call.up{transform:translate(-50%,0);}
+
+  @media (prefers-reduced-motion:reduce){
+    .sq::after,.call{transition:none;}
+  }
+
+  /* ---------- print ---------- */
+  @page{size:A4 landscape;margin:8mm;}
+  @media print{
+    body{background:#fff;}
+    .masthead,.controls,.utils,.call{display:none;}
+    /* two A5 cards side by side on a landscape A4 sheet */
+    #cards{display:grid;grid-template-columns:1fr 1fr;gap:8mm;}
+    .card{
+      display:flex!important;
+      flex-direction:column;
+      max-width:none;
+      width:100%;
+      height:184mm;
+      margin:0;
+      padding:0;
+      overflow:hidden;
+      break-inside:avoid;
+      page-break-inside:avoid;
+    }
+    .card:nth-of-type(2n+1){border-right:1px dashed var(--rule);padding-right:6mm;}
+    .card-head{padding-bottom:8px;}
+    .player{font-size:22pt;}
+    .player small{font-size:8pt;margin-bottom:3px;}
+    .serial{font-size:8pt;}
+    .grid{width:124mm;margin:6mm auto 0;gap:2px;}
+    .sq{font-size:10pt;line-height:1.1;padding:3px 2px;}
+    .sq.dabbed::after{display:none;}
+    .sq.dabbed span{color:var(--ink);}
+    .card-foot{margin-top:auto;font-size:8pt;}
+    .rule-list{font-size:12pt;line-height:1.4;margin-top:12px;}
+    .rule-list li{margin-bottom:8px;}
+    .calls-head{font-size:9pt;margin-top:16px;padding-top:10px;}
+  }
+</style>
+</head>
+<body>
+
+<header class="masthead">
+  <h1>Stag Bingo</h1>
+  <p class="where">Dublin &middot; 22-23 Aug 2026</p>
+</header>
+
+<section class="gate" id="gate">
+  <p class="gate-q">Who's playing?</p>
+  <input class="gate-input" id="name-input" type="text" autocomplete="off"
+         autocapitalize="words" spellcheck="false" placeholder="Your first name">
+  <button class="gate-go" id="name-go">Get my card</button>
+  <p class="gate-err" id="gate-err" hidden>That name isn't on the list.</p>
+</section>
+
+<nav class="controls" id="tabs" role="tablist" aria-label="Choose your card" hidden></nav>
+<div class="utils" id="utils" hidden>
+  <button class="util" id="rules-toggle">Rules</button>
+  <button class="util" id="clear">Clear my card</button>
+  <button class="util" id="switch">Not you?</button>
+  <button class="util" id="print" hidden>Print all seven</button>
+</div>
+
+<main id="cards"></main>
+<div class="call" id="call" role="status" aria-live="polite"></div>
+
+<script>
+const PLAYERS = ["Will","Maria","Dan","Jake","Sam","Kris","Tom"];
+
+const RULES = [
+  "Seven cards, one each. Tom gets one too, and his squares are about the rest of us.",
+  "No cards until we've landed. Nobody is playing this at the gate.",
+  "Group squares count for everyone at the same time.",
+  "Disputes go to the best man. The ruling is final and occasionally corrupt.",
+  "Nobody has to drink to win a square. Marking it is enough, and a soft one always counts.",
+  "A square that says someone never means you. It has to be one of the others."
+];
+
+/* The calls. Kept last and set darker so they stand out. */
+const CALLS = [
+  "First line: shout Aimee. Everyone else drinks, and Tom calls the winner his best friend for the rest of the night, or he drinks.",
+  "Full house: shout it twice. Everyone else sees off their drink, and Tom calls the winner Aimee for the rest of the night, or he drinks.",
+  "If Tom wins, it flips. The rest of us call him our best friend for the rest of the night, or we drink."
+];
+
+/* Squares that only work on certain cards. */
+const RESTRICT = {
+  "Someone completes a full round of Cardinal Puff": ["Jake","Sam","Tom"]
+};
+
+// These two are mutually exclusive and never land on the same card.
+const HOME_EARLY = "Tom is home before 10pm";
+const OUT_LATE   = "Tom is still out past midnight";
+
+/* Pool A: the six cards. */
+const POOL = [
+  "Tom talks about a ski trip",
+  "Tom mentions ice hockey",
+  "Tom mentions running",
+  "Tom talks about football",
+  "Someone says the Guinness is better here",
+  "Tom photographs a drink",
+  "Tom orders a whiskey",
+  "Tom explains a whiskey",
+  "Tom sings along to anything",
+  "Tom befriends a stranger",
+  "Tom says \"to be fair\"",
+  "Will says \"to be fair\"",
+  "Sam says \"to be fair\"",
+  "Jake says \"to be fair\"",
+  "Tom chats shit about Immersify",
+  "Kris chats shit about Immersify",
+  "Dan chats shit about Immersify",
+  "Maria chats shit about Immersify",
+  "Tom wants to leave a bar",
+  "Someone claims they're good at darts",
+  "Someone claims they're bad at darts",
+  "Tom loses at darts",
+  "Tom wins at darts",
+  "Tom falls asleep not in the hotel",
+  "Tom mentions the wedding",
+  "Someone completes a full round of Cardinal Puff",
+  HOME_EARLY,
+  OUT_LATE,
+  "Tom retells an old story",
+  "Tom checks a score (football or hockey)",
+  "Sam's flight is cancelled or delayed",
+  "Someone gets stopped at security",
+  "Someone mentions a different wedding",
+  "Someone loses something",
+  "The stag adopts a new member",
+  "Someone chats shit about a former manager",
+  "Jake talks about the environment",
+  "A group photo takes place",
+  "Anyone's phone dies",
+  "Someone complains about Justin",
+  "Kris mentions softball",
+  "Kris mentions graphic design",
+  "Jake orders gin",
+  "Will mentions running",
+  "Sam mentions elevators",
+  "Maria mentions marketing",
+  "Maria talks about languages",
+  "Maria complains about visas",
+  "Dan mentions Spanish",
+  "Dan talks about photography",
+  "Dan shows someone his photos",
+  "Someone orders takeaway"
+];
+
+/* Pool B: Tom's card. Pool A mirrored onto everybody else, plus his two extras. */
+const GROUP_POOL = [
+  "Someone talks about a ski trip",
+  "Someone mentions ice hockey",
+  "Someone mentions running",
+  "Someone talks about football",
+  "Someone says the Guinness is better here",
+  "Someone photographs a drink",
+  "Someone orders a whiskey",
+  "Someone explains a whiskey",
+  "Someone sings along to anything",
+  "Someone befriends a stranger",
+  "Will says \"to be fair\"",
+  "Sam says \"to be fair\"",
+  "Jake says \"to be fair\"",
+  "Kris chats shit about Immersify",
+  "Dan chats shit about Immersify",
+  "Maria chats shit about Immersify",
+  "Someone wants to leave a bar",
+  "Someone claims they're good at darts",
+  "Someone claims they're bad at darts",
+  "Someone loses at darts",
+  "Someone wins at darts",
+  "Someone falls asleep not in the hotel",
+  "Someone mentions the wedding",
+  "Someone proposes a toast",
+  "Someone completes a full round of Cardinal Puff",
+  "Someone goes home before everyone else",
+  "Someone is still out past midnight",
+  "Someone retells an old story",
+  "Someone checks a score (football or hockey)",
+  "Sam's flight is cancelled or delayed",
+  "Someone gets stopped at security",
+  "Someone mentions a different wedding",
+  "Someone loses something",
+  "The stag adopts a new member",
+  "Someone chats shit about a former manager",
+  "Jake talks about the environment",
+  "A group photo takes place",
+  "Anyone's phone dies",
+  "Someone complains about Justin",
+  "Someone orders takeaway",
+  "Kris mentions softball",
+  "Kris mentions graphic design",
+  "Jake orders gin",
+  "Will mentions running",
+  "Sam mentions elevators",
+  "Maria mentions marketing",
+  "Maria talks about languages",
+  "Maria complains about visas",
+  "Dan mentions Spanish",
+  "Dan talks about photography",
+  "Dan shows someone his photos",
+  "Someone can't find their room key"
+];
+
+/* Deterministic shuffle so each card stays the same on every reload. */
+function seedFrom(str){
+  let h = 2166136261;
+  for (let i = 0; i < str.length; i++){
+    h ^= str.charCodeAt(i);
+    h = Math.imul(h, 16777619);
+  }
+  return h >>> 0;
+}
+function rng(seed){
+  return function(){
+    seed |= 0; seed = seed + 0x6D2B79F5 | 0;
+    let t = Math.imul(seed ^ seed >>> 15, 1 | seed);
+    t = t + Math.imul(t ^ t >>> 7, 61 | t) ^ t;
+    return ((t ^ t >>> 14) >>> 0) / 4294967296;
+  };
+}
+/* Nobody gets a square with their own name on it, and RESTRICT wins where set. */
+function allowed(player, square){
+  if (RESTRICT[square]) return RESTRICT[square].indexOf(player) !== -1;
+  return !new RegExp("(^|[^A-Za-z])" + player + "([^A-Za-z]|$)").test(square);
+}
+
+function buildCard(player){
+  const rand = rng(seedFrom("stag-dublin-v2-" + player));
+  const drop = rand() < 0.5 ? HOME_EARLY : OUT_LATE;
+  const base = player === "Tom" ? GROUP_POOL.slice() : POOL.filter(s => s !== drop);
+  const items = base.filter(s => allowed(player, s));
+  for (let i = items.length - 1; i > 0; i--){
+    const j = Math.floor(rand() * (i + 1));
+    [items[i], items[j]] = [items[j], items[i]];
+  }
+  const picked = items.slice(0, 24);
+  picked.splice(12, 0, null); // centre free space
+  return picked;
+}
+
+const LINES = [];
+for (let r = 0; r < 5; r++) LINES.push([0,1,2,3,4].map(c => r*5+c));
+for (let c = 0; c < 5; c++) LINES.push([0,1,2,3,4].map(r => r*5+c));
+LINES.push([0,6,12,18,24], [4,8,12,16,20]);
+
+const cardsEl = document.getElementById("cards");
+const tabsEl  = document.getElementById("tabs");
+const callEl  = document.getElementById("call");
+let active = "Rules";
+let callTimer;
+let me = null;                       // the player using this device
+const ORGANISER = /[?&]all\b/.test(location.search);
+
+/* Saved on the device so a reload keeps your dabs. Fails quietly if
+   storage is blocked (private browsing, embedded previews). */
+const KEY = "stagbingo:v1:";
+function save(k, v){ try{ localStorage.setItem(KEY + k, JSON.stringify(v)); }catch(e){} }
+function load(k){
+  try{ const raw = localStorage.getItem(KEY + k); return raw ? JSON.parse(raw) : null; }
+  catch(e){ return null; }
+}
+function drop(k){ try{ localStorage.removeItem(KEY + k); }catch(e){} }
+
+function selectTab(name){
+  active = name;
+  [...tabsEl.children].forEach(t => t.setAttribute("aria-selected", String(t.dataset.name === name)));
+  [...cardsEl.children].forEach(c => c.hidden = c.dataset.player !== name);
+}
+
+function addTab(name){
+  const tab = document.createElement("button");
+  tab.className = "tab";
+  tab.type = "button";
+  tab.role = "tab";
+  tab.dataset.name = name;
+  tab.textContent = name;
+  tab.setAttribute("aria-selected", String(name === active));
+  tab.addEventListener("click", () => selectTab(name));
+  tabsEl.appendChild(tab);
+}
+
+addTab("Rules");
+const rulesCard = document.createElement("section");
+rulesCard.className = "card rules";
+rulesCard.dataset.player = "Rules";
+rulesCard.hidden = true;
+rulesCard.innerHTML =
+  '<div class="card-head">' +
+    '<h2 class="player"><small>How it works</small>Rules</h2>' +
+    '<div class="serial">Dublin / 2026</div>' +
+  '</div>' +
+  '<ol class="rule-list">' + RULES.map(r => "<li>" + r + "</li>").join("") + '</ol>' +
+  '<p class="calls-head">The call</p>' +
+  '<ol class="rule-list calls" start="' + (RULES.length + 1) + '">' + CALLS.map(r => "<li>" + r + "</li>").join("") + '</ol>';
+cardsEl.appendChild(rulesCard);
+
+function announce(text){
+  callEl.textContent = text;
+  callEl.classList.add("up");
+  clearTimeout(callTimer);
+  callTimer = setTimeout(() => callEl.classList.remove("up"), 3600);
+}
+
+function check(card){
+  const cells = [...card.querySelectorAll(".sq")];
+  const on = i => cells[i].classList.contains("dabbed") || cells[i].classList.contains("free");
+  const full = cells.every((_, i) => on(i));
+  if (full && !card.dataset.house){
+    card.dataset.house = "1";
+    announce("Aimee, Aimee! Full house.");
+    return;
+  }
+  const lines = LINES.filter(l => l.every(on)).length;
+  if (lines > Number(card.dataset.lines || 0)){
+    card.dataset.lines = lines;
+    if (!full) announce("Aimee! Everyone else drinks.");
+  } else {
+    card.dataset.lines = lines;
+  }
+}
+
+PLAYERS.forEach((player, n) => {
+  addTab(player);
+
+  const card = document.createElement("section");
+  card.className = "card";
+  card.dataset.player = player;
+  card.hidden = true;
+
+  const serial = String(n + 1).padStart(2, "0");
+  const foot = '<span>Line = shout Aimee once</span><span>Full house = shout it twice</span>';
+  card.innerHTML =
+    '<div class="card-head">' +
+      '<h2 class="player"><small>Card for</small>' + player + '</h2>' +
+      '<div class="serial">No. ' + serial + ' / 07</div>' +
+    '</div>' +
+    '<div class="grid"></div>' +
+    '<div class="card-foot">' + foot + '</div>';
+
+  const grid = card.querySelector(".grid");
+  buildCard(player).forEach((text, i) => {
+    const sq = document.createElement("button");
+    sq.type = "button";
+    sq.className = "sq" + (text === null ? " free" : "");
+    sq.style.setProperty("--tilt", (Math.random() * 24 - 12).toFixed(1) + "deg");
+    sq.innerHTML = text === null ? "" : "<span>" + text + "</span>";
+    if (text === null){
+      sq.disabled = true;
+      sq.setAttribute("aria-label", "Free space");
+    } else {
+      sq.setAttribute("aria-pressed", "false");
+      sq.addEventListener("click", () => {
+        const on = sq.classList.toggle("dabbed");
+        sq.setAttribute("aria-pressed", String(on));
+        persist(card, player);
+        check(card);
+      });
+    }
+    grid.appendChild(sq);
+  });
+
+  restore(card, player);
+  cardsEl.appendChild(card);
+});
+
+/* Dabs are stored as the indices of the marked squares. */
+function persist(card, player){
+  const marked = [];
+  [...card.querySelectorAll(".sq")].forEach((sq, i) => {
+    if (sq.classList.contains("dabbed")) marked.push(i);
+  });
+  save("dabs:" + player, marked);
+}
+
+function restore(card, player){
+  const marked = load("dabs:" + player);
+  if (!Array.isArray(marked)) return;
+  const cells = [...card.querySelectorAll(".sq")];
+  marked.forEach(i => {
+    const sq = cells[i];
+    if (sq && !sq.classList.contains("free")){
+      sq.classList.add("dabbed");
+      sq.setAttribute("aria-pressed", "true");
+    }
+  });
+  const lines = LINES.filter(l => l.every(i => cells[i].classList.contains("dabbed") || cells[i].classList.contains("free"))).length;
+  card.dataset.lines = lines;
+}
+
+document.getElementById("clear").addEventListener("click", () => {
+  const card = cardsEl.querySelector('[data-player="' + active + '"]');
+  if (!card || active === "Rules") return;
+  card.querySelectorAll(".sq.dabbed").forEach(sq => {
+    sq.classList.remove("dabbed");
+    sq.setAttribute("aria-pressed", "false");
+  });
+  delete card.dataset.house;
+  card.dataset.lines = 0;
+  drop("dabs:" + active);
+});
+
+document.getElementById("print").addEventListener("click", () => window.print());
+
+/* ---------- name gate ---------- */
+const gateEl  = document.getElementById("gate");
+const errEl   = document.getElementById("gate-err");
+const inputEl = document.getElementById("name-input");
+const utilsEl = document.getElementById("utils");
+
+function match(typed){
+  const t = (typed || "").trim().toLowerCase();
+  return PLAYERS.find(p => p.toLowerCase() === t) || null;
+}
+
+function enter(player){
+  me = player;
+  save("me", player);
+  gateEl.hidden = true;
+  utilsEl.hidden = false;
+  tabsEl.hidden = !ORGANISER;
+  document.getElementById("print").hidden = !ORGANISER;
+  selectTab(player);
+}
+
+document.getElementById("name-go").addEventListener("click", () => {
+  const found = match(inputEl.value);
+  if (found){ errEl.hidden = true; enter(found); }
+  else { errEl.hidden = false; inputEl.select(); }
+});
+
+inputEl.addEventListener("keydown", e => {
+  if (e.key === "Enter") document.getElementById("name-go").click();
+});
+
+document.getElementById("rules-toggle").addEventListener("click", () => {
+  selectTab(active === "Rules" ? me : "Rules");
+});
+
+document.getElementById("switch").addEventListener("click", () => {
+  me = null;
+  drop("me");
+  [...cardsEl.children].forEach(c => c.hidden = true);
+  utilsEl.hidden = true;
+  tabsEl.hidden = true;
+  gateEl.hidden = false;
+  inputEl.value = "";
+  inputEl.focus();
+});
+
+/* Skip the gate if this device has already claimed a card. */
+const remembered = match(load("me"));
+if (remembered) enter(remembered);
+else if (ORGANISER){ gateEl.hidden = true; tabsEl.hidden = false; utilsEl.hidden = false;
+  document.getElementById("print").hidden = false; selectTab("Rules"); }
+</script>
+</body>
+</html>

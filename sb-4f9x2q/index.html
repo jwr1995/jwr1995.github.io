@@ -269,7 +269,6 @@
     cursor:default;
     padding:0;
     background-color:var(--paper);
-    background-image:url("tom.png");
     background-size:92% auto;
     background-position:center bottom;
     background-repeat:no-repeat;
@@ -810,30 +809,54 @@ else if (ORGANISER){ gateEl.hidden = true; tabsEl.hidden = false; utilsEl.hidden
   document.getElementById("print").hidden = false; selectTab("Rules"); }
 
 /* ---------- password gate ----------
-   Not real security, just a lock so the page isn't sat wide open for
-   anyone who finds the URL. Checked as a hash so the password itself
-   isn't sitting in plain view-source. Remembered per-device. */
-const PW_HASH = "e904f7aa74e804bf8e984d4b966b87aa5dcbcdd5daa3bd13948a9822161e71a5";
+   Not real security, just a lock so the page (and Tom's photo) aren't
+   sat wide open for anyone who finds the URL. The password itself
+   never sits in the page: the gate check and the image key are two
+   differently-salted SHA-256 hashes of it, so reading the source
+   gives you neither the password nor a way to decrypt tom.enc.
+   Remembered per-device once entered correctly. */
+const PW_HASH = "7323d630bdbf3876290a45f831531ab4e6e038e7cba15618d72f776ba25c0fbc";
 const pwgateEl = document.getElementById("pwgate");
 const pwInput  = document.getElementById("pw-input");
 const pwErr    = document.getElementById("pw-err");
 
-async function hashText(text){
-  const buf = await crypto.subtle.digest("SHA-256", new TextEncoder().encode(text));
-  return [...new Uint8Array(buf)].map(b => b.toString(16).padStart(2, "0")).join("");
+async function sha256Bytes(text){
+  return crypto.subtle.digest("SHA-256", new TextEncoder().encode(text));
 }
+async function hashHex(text){
+  return [...new Uint8Array(await sha256Bytes(text))].map(b => b.toString(16).padStart(2, "0")).join("");
+}
+function bytesToB64(buf){ return btoa(String.fromCharCode(...new Uint8Array(buf))); }
+function b64ToBytes(b64){ return Uint8Array.from(atob(b64), c => c.charCodeAt(0)); }
 
 function unlock(){
   pwgateEl.hidden = true;
   document.getElementById("app").hidden = false;
 }
 
+/* tom.enc is the centre photo, AES-256-GCM encrypted with a key
+   derived from the password. Fetched and decrypted in the browser,
+   never as a plain image file on the server. */
+async function applyTomImage(keyBytes){
+  try{
+    const key = await crypto.subtle.importKey("raw", keyBytes, { name: "AES-GCM" }, false, ["decrypt"]);
+    const buf = await (await fetch("tom.enc")).arrayBuffer();
+    const plain = await crypto.subtle.decrypt({ name: "AES-GCM", iv: buf.slice(0, 12) }, key, buf.slice(12));
+    const url = URL.createObjectURL(new Blob([plain], { type: "image/png" }));
+    document.querySelectorAll(".sq.free").forEach(sq => { sq.style.backgroundImage = 'url("' + url + '")'; });
+  }catch(e){ /* wrong key, or tom.enc unreachable: free square just stays blank */ }
+}
+
 async function tryUnlock(){
-  const hash = await hashText(pwInput.value || "");
+  const typed = pwInput.value || "";
+  const hash = await hashHex("stagbingo-gate:" + typed);
   if (hash === PW_HASH){
-    save("unlocked", true);
     pwErr.hidden = true;
+    const keyBytes = await sha256Bytes("stagbingo-img-key:" + typed);
+    save("unlocked", true);
+    save("imgkey", bytesToB64(keyBytes));
     unlock();
+    applyTomImage(keyBytes);
   } else {
     pwErr.hidden = false;
     pwInput.select();
@@ -843,8 +866,13 @@ async function tryUnlock(){
 document.getElementById("pw-go").addEventListener("click", tryUnlock);
 pwInput.addEventListener("keydown", e => { if (e.key === "Enter") tryUnlock(); });
 
-if (load("unlocked") === true) unlock();
-else pwInput.focus();
+const savedImgKey = load("imgkey");
+if (load("unlocked") === true){
+  unlock();
+  if (savedImgKey) applyTomImage(b64ToBytes(savedImgKey));
+} else {
+  pwInput.focus();
+}
 </script>
 </body>
 </html>

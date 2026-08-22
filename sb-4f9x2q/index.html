@@ -144,6 +144,29 @@
   }
   .gate-err[hidden]{display:none;}
 
+  /* ---------- password gate ---------- */
+  .pwgate{
+    min-height:100vh;
+    display:flex;
+    flex-direction:column;
+    align-items:center;
+    justify-content:center;
+    padding:24px 22px;
+    text-align:center;
+  }
+  .pwgate[hidden]{display:none;}
+  .pwgate .pw-title{
+    font-family:"Anton",Impact,sans-serif;
+    font-size:clamp(28px,8vw,44px);
+    letter-spacing:.02em;
+    line-height:.95;
+    margin:0 0 26px;
+    text-transform:uppercase;
+    color:var(--paper);
+  }
+  .pwgate .gate{margin:0;padding:0;max-width:300px;}
+  #app[hidden]{display:none;}
+
   /* ---------- card ---------- */
   .card{
     background:var(--paper);
@@ -246,7 +269,6 @@
     cursor:default;
     padding:0;
     background-color:var(--paper);
-    background-image:url("tom.png");
     background-size:92% auto;
     background-position:center bottom;
     background-repeat:no-repeat;
@@ -355,6 +377,19 @@
 </head>
 <body>
 
+<section class="pwgate" id="pwgate">
+  <h1 class="pw-title">Stag Bingo</h1>
+  <div class="gate">
+    <p class="gate-q">This one's locked</p>
+    <input class="gate-input" id="pw-input" type="password" autocomplete="off"
+           spellcheck="false" placeholder="Password">
+    <button class="gate-go" id="pw-go">Unlock</button>
+    <p class="gate-err" id="pw-err" hidden>Wrong password.</p>
+  </div>
+</section>
+
+<div id="app" hidden>
+
 <header class="masthead">
   <h1>Stag Bingo</h1>
   <p class="where">Dublin &middot; 22-23 Aug 2026</p>
@@ -378,6 +413,8 @@
 
 <main id="cards"></main>
 <div class="call" id="call" role="status" aria-live="polite"></div>
+
+</div>
 
 <script>
 const PLAYERS = ["Will","Maria","Dan","Jake","Sam","Kris","Tom"];
@@ -770,6 +807,72 @@ const remembered = match(load("me"));
 if (remembered) enter(remembered);
 else if (ORGANISER){ gateEl.hidden = true; tabsEl.hidden = false; utilsEl.hidden = false;
   document.getElementById("print").hidden = false; selectTab("Rules"); }
+
+/* ---------- password gate ----------
+   Not real security, just a lock so the page (and Tom's photo) aren't
+   sat wide open for anyone who finds the URL. The password itself
+   never sits in the page: the gate check and the image key are two
+   differently-salted SHA-256 hashes of it, so reading the source
+   gives you neither the password nor a way to decrypt tom.enc.
+   Remembered per-device once entered correctly. */
+const PW_HASH = "7323d630bdbf3876290a45f831531ab4e6e038e7cba15618d72f776ba25c0fbc";
+const pwgateEl = document.getElementById("pwgate");
+const pwInput  = document.getElementById("pw-input");
+const pwErr    = document.getElementById("pw-err");
+
+async function sha256Bytes(text){
+  return crypto.subtle.digest("SHA-256", new TextEncoder().encode(text));
+}
+async function hashHex(text){
+  return [...new Uint8Array(await sha256Bytes(text))].map(b => b.toString(16).padStart(2, "0")).join("");
+}
+function bytesToB64(buf){ return btoa(String.fromCharCode(...new Uint8Array(buf))); }
+function b64ToBytes(b64){ return Uint8Array.from(atob(b64), c => c.charCodeAt(0)); }
+
+function unlock(){
+  pwgateEl.hidden = true;
+  document.getElementById("app").hidden = false;
+}
+
+/* tom.enc is the centre photo, AES-256-GCM encrypted with a key
+   derived from the password. Fetched and decrypted in the browser,
+   never as a plain image file on the server. */
+async function applyTomImage(keyBytes){
+  try{
+    const key = await crypto.subtle.importKey("raw", keyBytes, { name: "AES-GCM" }, false, ["decrypt"]);
+    const buf = await (await fetch("tom.enc")).arrayBuffer();
+    const plain = await crypto.subtle.decrypt({ name: "AES-GCM", iv: buf.slice(0, 12) }, key, buf.slice(12));
+    const url = URL.createObjectURL(new Blob([plain], { type: "image/png" }));
+    document.querySelectorAll(".sq.free").forEach(sq => { sq.style.backgroundImage = 'url("' + url + '")'; });
+  }catch(e){ /* wrong key, or tom.enc unreachable: free square just stays blank */ }
+}
+
+async function tryUnlock(){
+  const typed = pwInput.value || "";
+  const hash = await hashHex("stagbingo-gate:" + typed);
+  if (hash === PW_HASH){
+    pwErr.hidden = true;
+    const keyBytes = await sha256Bytes("stagbingo-img-key:" + typed);
+    save("unlocked", true);
+    save("imgkey", bytesToB64(keyBytes));
+    unlock();
+    applyTomImage(keyBytes);
+  } else {
+    pwErr.hidden = false;
+    pwInput.select();
+  }
+}
+
+document.getElementById("pw-go").addEventListener("click", tryUnlock);
+pwInput.addEventListener("keydown", e => { if (e.key === "Enter") tryUnlock(); });
+
+const savedImgKey = load("imgkey");
+if (load("unlocked") === true){
+  unlock();
+  if (savedImgKey) applyTomImage(b64ToBytes(savedImgKey));
+} else {
+  pwInput.focus();
+}
 </script>
 </body>
 </html>
